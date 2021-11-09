@@ -6,12 +6,6 @@
 Вариант: 30007
 -->
 
-<head>
-  <link rel="icon" href="../favicon.ico"/>
-  <link rel="stylesheet" type="text/css" href="app.component.scss"/>
-  <title>UsefulApp</title>
-</head>
-
 <body>
 <script src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
@@ -20,16 +14,7 @@
   <div>
     <app-header></app-header>
   </div>
-  <div id="content">
-    <div id="leftbar">
-      <canvas id="canvas" width="300" height="300"></canvas>
-    </div>
-    <div id="rightbar">
-      <app-form></app-form>
-      <p-slider [(ngModel)]="title" [ngModelOptions]="{standalone: true}" [min]="-5" [max]="5"></p-slider>
-
-    </div>
-  </div>
+  <app-form></app-form>
   <label style="margin-left: 45%;">Журнал запросов</label>
   <br/><br/>
   <table id="historyTable"></table>

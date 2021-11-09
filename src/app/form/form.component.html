@@ -1,33 +1,43 @@
-<form id="field-form" action="" method="POST">
-  <fieldset style="border: none;">
-    <label>Выберите координату X:</label>
-    <p-autoComplete [(ngModel)]="selectedX" name="X" [suggestions]="outputX" (completeMethod)="searchX($event)"
-                    [dropdown]="true" [readonly]="true" placeholder="Выбор"></p-autoComplete>
-    <br/>
+<div id="content">
+  <div id="leftbar">
+    <app-graph #graphComponent></app-graph>
+  </div>
+  <div id="rightbar">
+    <form id="field-form" action="" method="POST">
+      <fieldset style="border: none;">
+        <label>Выберите координату X:</label>
+        <p-autoComplete [(ngModel)]="selectedX" name="X" [suggestions]="outputX" (completeMethod)="searchX($event)"
+                        [dropdown]="true" [readonly]="true" placeholder="Выбор"></p-autoComplete>
+        <br/>
 
 
-    <label>Введите координату Y [-5,3]:</label>
-    <p-slider [(ngModel)]="selectedY" [ngModelOptions]="{standalone: true}" [min]="-5" [max]="5"></p-slider>
+        <label>Введите координату Y [{{selectedY}}]:</label>
+        <br/><br/>
+        <p-slider [(ngModel)]="selectedY" [ngModelOptions]="{standalone: true}" [min]="-5.0"
+                  [max]="5.0" [step]="0.01"></p-slider>
+
+        <br/>
 
 
-    <br/><br/>
+        <label>Введите параметр R:</label>
+        <p-autoComplete [(ngModel)]="selectedR" name="R" [suggestions]="outputR" (completeMethod)="searchR($event)"
+                        [dropdown]="true" [readonly]="true" placeholder="Выбор"></p-autoComplete>
 
+        <br/><br/>
 
-    <label>Введите параметр R:</label>
+        <button id="submit-button" class="button">
+          Отправить
+        </button>
 
-    <br/><br/>
+        <button id="reset-button" class="button" (click)="graphComponent.reset()">
+          Сбросить
+        </button>
 
-    <button id="submit-button" class="button"
-            value="Отправить">
-    </button>
+        <button id="invisible-button"
+                style="display:none;" onclick="console.log('clicked')">
+        </button>
 
-    <button id="reset-button" class="button"
-            value="Сбросить">
-    </button>
-
-    <button id="invisible-button"
-            style="display:none;" onclick="console.log('clicked')">
-    </button>
-
-  </fieldset>
-</form>
+      </fieldset>
+    </form>
+  </div>
+</div>

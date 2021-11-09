@@ -6,21 +6,23 @@ import { HeaderComponent } from './header/header.component';
 import { FormComponent } from './form/form.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
-import { SliderModule } from 'primeng/slider';
+import {SliderModule} from "primeng/slider";
+import { GraphComponent } from './form/graph/graph.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    FormComponent
+    FormComponent,
+    GraphComponent
   ],
   imports: [
     BrowserModule,
     AutoCompleteModule,
     FormsModule,
-    SliderModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    SliderModule
   ],
   providers: [],
   bootstrap: [AppComponent],
