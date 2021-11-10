@@ -3,11 +3,11 @@
     <app-graph #graphComponent></app-graph>
   </div>
   <div id="rightbar">
-    <form id="field-form" action="" method="POST">
+    <form id="field-form" method="GET">
       <fieldset style="border: none;">
-        <label>Выберите координату X:</label>
+        <label>Выберите координату X:  </label>
         <p-autoComplete [(ngModel)]="selectedX" name="X" [suggestions]="outputX" (completeMethod)="searchX($event)"
-                        [dropdown]="true" [readonly]="true" placeholder="Выбор"></p-autoComplete>
+                        [dropdown]="true" [readonly]="true" placeholder="не выбрано"></p-autoComplete>
         <br/>
 
 
@@ -19,17 +19,17 @@
         <br/>
 
 
-        <label>Введите параметр R:</label>
+        <label>Введите параметр R:  </label>
         <p-autoComplete [(ngModel)]="selectedR" name="R" [suggestions]="outputR" (completeMethod)="searchR($event)"
-                        [dropdown]="true" [readonly]="true" placeholder="Выбор"></p-autoComplete>
+                        [dropdown]="true" [readonly]="true" placeholder="не выбрано"></p-autoComplete>
 
-        <br/><br/>
+        <br/><br/><br/>
 
-        <button id="submit-button" class="button">
+        <button id="submit-button" type="submit" class="button" (click)="send()">
           Отправить
         </button>
 
-        <button id="reset-button" class="button" (click)="graphComponent.reset()">
+        <button id="reset-button"  class="button" (click)="graphComponent.reset()">
           Сбросить
         </button>
 

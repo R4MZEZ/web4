@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {FormServiceService} from "./form-service.service";
 
 
 @Component({
@@ -11,7 +12,7 @@ export class FormComponent implements OnInit {
   selectedX: number;
   resultsX: number[] = [-1.5, -1, -0.5, 0, 0.5, 1, 1.5];
 
-  selectedY: number;
+  selectedY: number = 0;
 
   outputR: number[];
   selectedR: number;
@@ -32,5 +33,11 @@ export class FormComponent implements OnInit {
 
   }
 
+  constructor(private service: FormServiceService) {
+  }
 
+  send() {
+    console.log("sent");
+    this.service.getHello();
+  }
 }

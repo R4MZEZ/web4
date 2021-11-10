@@ -8,6 +8,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import {SliderModule} from "primeng/slider";
 import { GraphComponent } from './form/graph/graph.component';
+import { HttpClientModule } from "@angular/common/http";
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { GraphComponent } from './form/graph/graph.component';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AutoCompleteModule,
     FormsModule,
     BrowserAnimationsModule,
