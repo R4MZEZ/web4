@@ -1,6 +1,6 @@
 <div id="content">
   <div id="leftbar">
-    <app-graph #graphComponent></app-graph>
+    <app-graph [points]="points" [r]="selectedR" #graphComponent  (resetTable)="clearTable()"></app-graph>
   </div>
   <div id="rightbar">
     <form id="field-form" method="GET">

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormServiceService} from "./form-service.service";
+import {ValidationService} from "./validator/validation.service";
 
 
 @Component({
@@ -34,34 +35,20 @@ export class FormComponent implements OnInit {
 
   }
 
-  constructor(private service: FormServiceService) {
+  constructor(private sendService: FormServiceService, private validateService: ValidationService) {
   }
 
   send() {
     let valid = true;
 
-    if (!this.validateX()) {
-      document.getElementById("labelX")!.style.color = "#c42929";
-      valid = false;
-    } else
-      document.getElementById("labelX")!.style.color = "#8C9EAE";
-
-    if (!this.validateY()) {
-      document.getElementById("labelY")!.style.color = "#c42929";
-      valid = false;
-    } else
-      document.getElementById("labelY")!.style.color = "#8C9EAE";
-
-    if (!this.validateR()) {
-      document.getElementById("labelR")!.style.color = "#c42929";
-      valid = false;
-    } else
-      document.getElementById("labelR")!.style.color = "#8C9EAE";
+    if (!this.validateService.validateX(this.selectedX)) valid = false;
+    if (!this.validateService.validateY(this.selectedY)) valid = false;
+    if (!this.validateService.validateR(this.selectedR)) valid = false;
 
     if (!valid) return;
 
     let answer;
-    answer = this.service.sendCoordinates(this.selectedX, this.selectedY, this.selectedR);
+    answer = this.sendService.sendCoordinates(this.selectedX, this.selectedY, this.selectedR);
 
     answer.then((result) =>{
       this.addPoint(result)
@@ -69,26 +56,11 @@ export class FormComponent implements OnInit {
 
   }
 
-  validateX(): boolean {
-    return this.selectedX != undefined &&
-      this.selectedX <= 2.5 &&
-      this.selectedX >= -2.5
-  }
-
-  validateY(): boolean {
-    return this.selectedY != undefined &&
-      this.selectedY <= 5 &&
-      this.selectedY >= -5
-  }
-
-  validateR(): boolean {
-    return this.selectedR != undefined &&
-      this.selectedR <= 2.5 &&
-      this.selectedR >= 0
-  }
-
   addPoint(point){
     this.points.push(point);
   }
 
+  clearTable() {
+    this.points = []
+  }
 }
