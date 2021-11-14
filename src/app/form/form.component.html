@@ -5,13 +5,13 @@
   <div id="rightbar">
     <form id="field-form" method="GET">
       <fieldset style="border: none;">
-        <label>Выберите координату X:  </label>
+        <label id="labelX">Выберите координату X:  </label>
         <p-autoComplete [(ngModel)]="selectedX" name="X" [suggestions]="outputX" (completeMethod)="searchX($event)"
                         [dropdown]="true" [readonly]="true" placeholder="не выбрано"></p-autoComplete>
         <br/>
 
 
-        <label>Введите координату Y [{{selectedY}}]:</label>
+        <label id="labelY">Введите координату Y [{{selectedY}}]:</label>
         <br/><br/>
         <p-slider [(ngModel)]="selectedY" [ngModelOptions]="{standalone: true}" [min]="-5.0"
                   [max]="5.0" [step]="0.01"></p-slider>
@@ -19,7 +19,7 @@
         <br/>
 
 
-        <label>Введите параметр R:  </label>
+        <label id="labelR">Введите параметр R:  </label>
         <p-autoComplete [(ngModel)]="selectedR" name="R" [suggestions]="outputR" (completeMethod)="searchR($event)"
                         [dropdown]="true" [readonly]="true" placeholder="не выбрано"></p-autoComplete>
 
@@ -41,3 +41,5 @@
     </form>
   </div>
 </div>
+
+<app-table [points]="points"></app-table>

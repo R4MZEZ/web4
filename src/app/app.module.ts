@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import {SliderModule} from "primeng/slider";
 import { GraphComponent } from './form/graph/graph.component';
 import { HttpClientModule } from "@angular/common/http";
+import { TableComponent } from './form/table/table.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { HttpClientModule } from "@angular/common/http";
     AppComponent,
     HeaderComponent,
     FormComponent,
-    GraphComponent
+    GraphComponent,
+    TableComponent
   ],
   imports: [
     BrowserModule,

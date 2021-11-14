@@ -1,0 +1,23 @@
+<label style="margin-left: 45%;">Журнал запросов</label>
+<br/><br/>
+
+<table id="historyTable">
+  <tr *ngIf="points.length != 0">
+    <td>Координаты</td>
+    <td>Радиус</td>
+    <td>Время отправки</td>
+    <td>Исполнение</td>
+    <td>Результат</td>
+  </tr>
+  <ng-container *ngFor="let point of points">
+
+    <tr>
+      <td>({{point.x}}, {{point.y.toFixed(2)}})</td>
+      <td>{{point.r}}</td>
+      <td>{{point.time}}</td>
+      <td>{{point.script_time}}</td>
+      <td *ngIf="point.hit">Попадание</td>
+      <td *ngIf="!point.hit">Промах</td>
+    </tr>
+  </ng-container>
+</table>
