@@ -1,6 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormServiceService} from "./form-service.service";
 import {ValidationService} from "./validator/validation.service";
+import {FormGraphConnectorService} from "./form-graph-connector/form-graph-connector.service";
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -8,7 +10,15 @@ import {ValidationService} from "./validator/validation.service";
   templateUrl: './form.component.html',
   styleUrls: []
 })
-export class FormComponent implements OnInit {
+export class FormComponent implements OnInit, OnDestroy {
+  constructor(private sendService: FormServiceService,
+              private validateService: ValidationService,
+              private formGraphService: FormGraphConnectorService) {
+  }
+  private subs: Subscription;
+  subX: number;
+  subY: number;
+
   points: any[] = [];
 
   outputX: number[];
@@ -32,10 +42,23 @@ export class FormComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.subs = this.formGraphService.x$.subscribe((x)=>this.subX = x);
+    this.subs = this.formGraphService.y$.subscribe((y)=>this.subY = y);
+    this.subs = this.formGraphService.r$.subscribe(()=>{
+      let savedX = this.selectedX;
+      let savedY = this.selectedY;
+      this.selectedX = this.subX;
+      this.selectedY = this.subY;
+      this.send();
+      this.selectedX = savedX;
+      this.selectedY = savedY;
+      document.getElementById("invisible-button")!.click();
+    });
 
   }
 
-  constructor(private sendService: FormServiceService, private validateService: ValidationService) {
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 
   send() {
@@ -51,7 +74,8 @@ export class FormComponent implements OnInit {
     answer = this.sendService.sendCoordinates(this.selectedX, this.selectedY, this.selectedR);
 
     answer.then((result) =>{
-      this.addPoint(result)
+      this.addPoint(result);
+      this.formGraphService.updatePoint(result);
     })
 
   }
