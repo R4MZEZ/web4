@@ -80,7 +80,7 @@ export class GraphComponent implements OnInit {
     }
     ctx.fill();
     ctx.lineWidth = 0.4;
-    ctx.stroke(); 
+    ctx.stroke();
   }
 
   public reset(): void {

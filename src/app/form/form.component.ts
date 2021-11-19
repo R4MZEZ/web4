@@ -87,4 +87,5 @@ export class FormComponent implements OnInit, OnDestroy {
   clearTable() {
     this.points = []
   }
+
 }

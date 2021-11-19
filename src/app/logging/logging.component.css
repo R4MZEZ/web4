@@ -1,0 +1,73 @@
+/* Bordered form */
+form {
+  border: 2px solid #0e0e0e;
+  border-radius: 10px;
+  width: 30%;
+  margin: 10% auto auto;
+  min-width: 290px;
+}
+
+/* Full-width inputs */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  background-color: #444444;
+  color: #8C9EAE;
+  border: 0;
+}
+
+
+/* Set a style for all buttons */
+button {
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 50%;
+  -webkit-transition-duration: 0.8s;
+  transition-duration: 0.8s;
+}
+
+#login-button{
+  background-color: #04AA6D;
+  border-radius: 5px 0 0 5px;
+
+}
+
+#register-button{
+  background-color: #0675c4;
+  border-radius: 0 5px 5px 0;
+}
+
+/* Add a hover effect for buttons */
+#login-button:hover + #register-button {
+  width: 40%;
+}
+#login-button:hover{
+  opacity: 0.8;
+  width: 60%;
+}
+
+
+#register-button:hover{
+  opacity: 0.8;
+}
+
+
+/* Add padding to containers */
+.container {
+  padding: 16px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+  span.psw {
+    display: block;
+    float: none;
+  }
+  .cancelbtn {
+    width: 100%;
+  }
+}

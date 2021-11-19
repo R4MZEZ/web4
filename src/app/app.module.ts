@@ -10,7 +10,15 @@ import {SliderModule} from "primeng/slider";
 import { GraphComponent } from './form/graph/graph.component';
 import { HttpClientModule } from "@angular/common/http";
 import { TableComponent } from './form/table/table.component';
+import { RouterModule, Routes } from "@angular/router";
+import { LoggingComponent } from './logging/logging.component';
+import { AuthGuard } from './auth-guard/auth.guard'
+import {CookieService} from "ngx-cookie-service";
 
+const appRoutes: Routes = [
+  { path: '', component: FormComponent, canActivate: [AuthGuard] },
+  { path: 'login',      component: LoggingComponent }
+];
 
 @NgModule({
   declarations: [
@@ -18,9 +26,12 @@ import { TableComponent } from './form/table/table.component';
     HeaderComponent,
     FormComponent,
     GraphComponent,
-    TableComponent
+    TableComponent,
+    LoggingComponent
   ],
   imports: [
+    RouterModule.forRoot(appRoutes),
+    RouterModule,
     BrowserModule,
     HttpClientModule,
     AutoCompleteModule,
@@ -28,7 +39,7 @@ import { TableComponent } from './form/table/table.component';
     BrowserAnimationsModule,
     SliderModule
   ],
-  providers: [],
+  providers: [ CookieService ],
   bootstrap: [AppComponent],
   schemas:
     [CUSTOM_ELEMENTS_SCHEMA]
