@@ -1,14 +1,14 @@
 <form action="" method="post">
 
   <div class="container">
-    <label for="uname"><b>Имя пользователя</b></label>
-    <input type="text" placeholder="Введите имя" id="uname" required>
+    <label id="uname-label" for="uname"><b>Имя пользователя</b></label>
+    <input [(ngModel)]="username" name="uname" type="text" placeholder="Введите имя" id="uname" required>
 
-    <label for="psw"><b>Пароль</b></label>
-    <input type="password" placeholder="Введите пароль" id="psw" required>
+    <label id="psw-label" for="psw"><b>Пароль</b></label>
+    <input [(ngModel)]="password" name="psw" type="password" placeholder="Введите пароль" id="psw" required>
 
-    <button type="submit" id="login-button">ВОЙТИ</button>
-    <button type="submit" id="register-button">РЕГИСТРАЦИЯ</button>
+    <button type="submit" (click)="login()" id="login-button">ВОЙТИ</button>
+    <button type="submit" (click)="register()" id="register-button">РЕГИСТРАЦИЯ</button>
 
   </div>
 
