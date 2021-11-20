@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {CookieService} from "ngx-cookie-service";
+import {JwtService} from "./jwt-service/jwt.service";
 
 @Component({
   selector: 'app-logging',
@@ -12,10 +13,12 @@ export class LoggingComponent implements OnInit {
   password: String;
   loginURL = "http://127.0.0.1:8080/backend-1.0-SNAPSHOT/login"
   registerURL = "http://127.0.0.1:8080/backend-1.0-SNAPSHOT/register"
+  message;
 
 
   constructor(private router: Router,
-              private cookieService: CookieService) { }
+              private cookieService: CookieService,
+              private jwtService: JwtService) { }
 
   ngOnInit(): void {
   }
@@ -37,12 +40,22 @@ export class LoggingComponent implements OnInit {
           return response.json();
         }
 
-      }).then((result) =>{
-        if (result.authorized){
-          this.cookieService.set("logged","true")
+      }).then((user) =>{
+        if (user && user.jwt){
+          this.cookieService.set("currentUser",JSON.stringify(user))
+          this.jwtService.currentUserSubject = user;
           this.router.navigate(['/']);
         }else {
-          alert(result.message)
+          switch (user.errCode){
+            case 2: {
+              this.message = "Пользователя с таким именем и паролем не найдено"
+              break
+            }
+            case 3:{
+              //for new err codes
+              break
+            }
+          }
         }
 
       })
@@ -53,6 +66,44 @@ export class LoggingComponent implements OnInit {
   }
 
   register() {
+    if (this.validateForm()){
+      fetch(this.registerURL,
+        {
+          method: 'POST',
+          body: JSON.stringify({username: this.username, password: this.password})
+        }
+      ).then(response => {
+        if (!response.ok) {
+          console.log("fail");
+          return response.status;
+        } else {
+          console.log("success");
+          return response.json();
+        }
+
+      }).then((user) =>{
+        if (user && user.jwt){
+          this.cookieService.set("currentUser",JSON.stringify(user))
+          this.jwtService.currentUserSubject = user;
+          this.router.navigate(['/']);
+        }else {
+          switch (user.errCode){
+            case 1: {
+              this.message = "Пользователь с таким именем уже существует"
+              break
+            }
+            case 2:{
+              //for new err codes
+              break
+            }
+          }
+        }
+
+      })
+
+
+    }
+
 
   }
 

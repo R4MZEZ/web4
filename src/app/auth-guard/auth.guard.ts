@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import {CookieService} from "ngx-cookie-service";
+import {JwtService} from "../logging/jwt-service/jwt.service";
 
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
   constructor(
     private router: Router,
-    private cookieService: CookieService
+    private jwtService: JwtService
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 
-    if (this.cookieService.get("logged") == "true") {
+    if (this.jwtService.currentUserSubject) {
       // authorised so return true
       return true;
     }
