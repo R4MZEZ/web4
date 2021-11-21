@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {CookieService} from "ngx-cookie-service";
 import {JwtService} from "./jwt-service/jwt.service";
+import {sha256} from "js-sha256";
 
 @Component({
   selector: 'app-logging',
@@ -9,8 +10,8 @@ import {JwtService} from "./jwt-service/jwt.service";
   styleUrls: ['./logging.component.css']
 })
 export class LoggingComponent implements OnInit {
-  username: String;
-  password: String;
+  username: string;
+  password: string;
   loginURL = "http://127.0.0.1:8080/backend-1.0-SNAPSHOT/login"
   registerURL = "http://127.0.0.1:8080/backend-1.0-SNAPSHOT/register"
   message;
@@ -21,6 +22,10 @@ export class LoggingComponent implements OnInit {
               private jwtService: JwtService) { }
 
   ngOnInit(): void {
+    if (this.cookieService.check("message")){
+      this.message = this.cookieService.get("message");
+      this.cookieService.delete("message");
+    }
   }
 
 
@@ -29,7 +34,7 @@ export class LoggingComponent implements OnInit {
       fetch(this.loginURL,
         {
           method: 'POST',
-          body: JSON.stringify({username: this.username, password: this.password})
+          body: JSON.stringify({username: this.username, password: sha256(this.password)})
         }
       ).then(response => {
         if (!response.ok) {
@@ -70,7 +75,7 @@ export class LoggingComponent implements OnInit {
       fetch(this.registerURL,
         {
           method: 'POST',
-          body: JSON.stringify({username: this.username, password: this.password})
+          body: JSON.stringify({username: this.username, password: sha256(this.password)})
         }
       ).then(response => {
         if (!response.ok) {

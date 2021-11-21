@@ -11,6 +11,7 @@ import {Subscription} from "rxjs";
 export class GraphComponent implements OnInit {
   @Output() resetTable = new EventEmitter();
   @Input() r: number;
+  @Input() points: any[];
   private subs: Subscription;
 
 
@@ -21,7 +22,8 @@ export class GraphComponent implements OnInit {
   ngOnInit(): void {
     this.drawGraph();
     this.subs = this.formGraphService.point$.subscribe((point) => this.drawPoint(point));
-
+    this.subs = this.formGraphService.selectedR$.subscribe((r) => this.r = r);
+    this.loadPoints();
   }
 
   drawGraph(): void {
@@ -44,7 +46,7 @@ export class GraphComponent implements OnInit {
 
   }
 
-  getCoords(elem) { // кроме IE8-
+  getCoords(elem) {
     const box = elem.getBoundingClientRect();
 
     return {
@@ -65,12 +67,12 @@ export class GraphComponent implements OnInit {
     //@ts-ignore
     console.log(this.getCoords(document.querySelector("#canvas")!));
 
-
+    console.log(this.r)
     console.log(x + ', ' + y)
 
 
     ctx.beginPath();
-    ctx.arc(x, y, 2, 0,2 * Math.PI, false);
+    ctx.arc(x, y, 2, 0, 2 * Math.PI, false);
     if (point.hit) {
       ctx.fillStyle = '#31c73e';
       ctx.strokeStyle = '#99da90';
@@ -83,8 +85,9 @@ export class GraphComponent implements OnInit {
     ctx.stroke();
   }
 
-  public reset(): void {
-    this.resetTable.emit();
+  public reset(tableToo): void {
+    if (tableToo)
+      this.resetTable.emit();
     let canvas = document.querySelector("#canvas");
     // @ts-ignore
     const context = canvas!.getContext('2d');
@@ -92,7 +95,6 @@ export class GraphComponent implements OnInit {
     context.clearRect(0, 0, canvas!.width, canvas!.height);
     this.drawGraph();
   }
-
 
   sendClickedPoint(e) {
     if (!this.validationService.validateR(this.r)) {
@@ -120,5 +122,19 @@ export class GraphComponent implements OnInit {
     console.log(x + ", " + y)
 
   }
+
+  redrawGraph() {
+    this.reset(false);
+    this.drawGraph();
+    this.loadPoints();
+  }
+
+  loadPoints() {
+    if (this.r != undefined && this.r > 0)
+      this.points.forEach(point => {
+        this.drawPoint(point);
+      });
+  }
+
 
 }

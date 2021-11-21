@@ -3,6 +3,8 @@ import {FormServiceService} from "./form-service.service";
 import {ValidationService} from "./validator/validation.service";
 import {FormGraphConnectorService} from "./form-graph-connector/form-graph-connector.service";
 import { Subscription } from 'rxjs';
+import {Router} from "@angular/router";
+import {CookieService} from "ngx-cookie-service";
 
 
 @Component({
@@ -13,7 +15,9 @@ import { Subscription } from 'rxjs';
 export class FormComponent implements OnInit, OnDestroy {
   constructor(private sendService: FormServiceService,
               private validateService: ValidationService,
-              private formGraphService: FormGraphConnectorService) {
+              private formGraphService: FormGraphConnectorService,
+              private router: Router,
+              private cookieService: CookieService) {
   }
   private subs: Subscription;
   subX: number;
@@ -55,6 +59,12 @@ export class FormComponent implements OnInit, OnDestroy {
       document.getElementById("invisible-button")!.click();
     });
 
+    this.sendService.getPoints().then((points) =>{
+      for(let i in points)
+        this.points.push(points[i]);
+    })
+
+
   }
 
   ngOnDestroy(): void {
@@ -74,6 +84,7 @@ export class FormComponent implements OnInit, OnDestroy {
     answer = this.sendService.sendCoordinates(this.selectedX, this.selectedY, this.selectedR);
 
     answer.then((result) =>{
+      this.manageErrCode(result.errCode);
       this.addPoint(result);
       this.formGraphService.updatePoint(result);
     })
@@ -85,7 +96,23 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   clearTable() {
+    this.sendService.clear().then((result) => {
+      this.manageErrCode(result.errCode);
+    });
     this.points = []
   }
 
+  manageErrCode(errCode){
+    switch (errCode){
+      case 3: {
+        this.cookieService.delete("currentUser");
+        this.cookieService.set("message", "Время сессии истекло, пожалуйста, выполните повторную авторизацию")
+        this.router.navigate(['/login']);
+      }
+    }
+  }
+
+  public changeR(){
+    this.formGraphService.changeSelectedR(this.selectedR)
+  }
 }
