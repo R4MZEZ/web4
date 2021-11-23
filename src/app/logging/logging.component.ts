@@ -26,6 +26,8 @@ export class LoggingComponent implements OnInit {
       this.message = this.cookieService.get("message");
       this.cookieService.delete("message");
     }
+    this.digitalClock();
+    setInterval(this.digitalClock, 1000);
   }
 
 
@@ -132,6 +134,18 @@ export class LoggingComponent implements OnInit {
       valid = false;
     }
     return valid;
+  }
+
+  digitalClock() {
+    const date = new Date();
+    let hours = date.getHours().toString();
+    let minutes = date.getMinutes().toString();
+    let seconds = date.getSeconds().toString();
+    //* добавление ведущих нулей */
+    if (parseInt(hours) < 10) hours = "0" + hours;
+    if (parseInt(minutes) < 10) minutes = "0" + minutes;
+    if (parseInt(seconds) < 10) seconds = "0" + seconds;
+    document.getElementById("clock")!.innerHTML = hours + ":" + minutes + ":" + seconds;
   }
 
 }

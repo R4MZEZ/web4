@@ -17,7 +17,9 @@ import {CookieService} from "ngx-cookie-service";
 
 const appRoutes: Routes = [
   { path: '', component: FormComponent, canActivate: [AuthGuard] },
-  { path: 'login',      component: LoggingComponent }
+  { path: 'login',      component: LoggingComponent },
+  { path: "**", component: FormComponent, canActivate:[AuthGuard]}
+
 ];
 
 @NgModule({

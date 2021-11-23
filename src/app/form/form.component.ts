@@ -10,7 +10,7 @@ import {CookieService} from "ngx-cookie-service";
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
-  styleUrls: []
+  styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit, OnDestroy {
   constructor(private sendService: FormServiceService,

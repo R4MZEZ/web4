@@ -1,10 +1,12 @@
 /* Bordered form */
 form {
-  border: 2px solid #0e0e0e;
+  background-color: #28282f;
+  /*border: 2px solid #0e0e0e;*/
   border-radius: 10px;
   width: 30%;
   margin: 10% auto auto;
   min-width: 290px;
+  box-shadow: 0 0 8px black;
 }
 
 /* Full-width inputs */
@@ -21,6 +23,7 @@ input[type=text], input[type=password] {
 /* Set a style for all buttons */
 button {
   color: white;
+  text-shadow: 1px 1px 3px #5b5b5b;
   padding: 14px 20px;
   margin: 8px 0;
   border: none;
@@ -70,4 +73,9 @@ button {
   .cancelbtn {
     width: 100%;
   }
+}
+
+#clock{
+  text-align: center;
+  margin-top: 10px;
 }
