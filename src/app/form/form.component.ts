@@ -112,6 +112,11 @@ export class FormComponent implements OnInit, OnDestroy {
     }
   }
 
+  logout(){
+    this.cookieService.delete("currentUser");
+    this.router.navigate(['/login']);
+  }
+
   public changeR(){
     this.formGraphService.changeSelectedR(this.selectedR)
   }
