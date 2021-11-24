@@ -108,6 +108,13 @@ export class FormComponent implements OnInit, OnDestroy {
         this.cookieService.delete("currentUser");
         this.cookieService.set("message", "Время сессии истекло, пожалуйста, выполните повторную авторизацию")
         this.router.navigate(['/login']);
+        break;
+      }
+      case 4:{
+        this.cookieService.delete("currentUser");
+        this.cookieService.set("message", "хелиос упал брат")
+        this.router.navigate(['/login']);
+        break;
       }
     }
   }

@@ -12,7 +12,7 @@ export class FormServiceService {
   constructor(private cookieService: CookieService) {
   }
 
-  url = "http://127.0.0.1:8080/backend-1.0-SNAPSHOT";
+  url = "http://127.0.0.1:31272/backend-1.0-SNAPSHOT";
 
   sendCoordinates(x, y, r) : Promise<any>{
     return fetch(this.url + "/checkPoint",

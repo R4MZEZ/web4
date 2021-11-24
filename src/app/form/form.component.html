@@ -9,7 +9,7 @@
     <form id="field-form" method="GET">
       <fieldset style="border: none;">
         <label id="labelX">Выберите координату X:  </label>
-        <p-autoComplete [(ngModel)]="selectedX" name="X" [suggestions]="outputX" (completeMethod)="searchX($event)"
+        <p-autoComplete id="autoComplete" [(ngModel)]="selectedX" name="X" [suggestions]="outputX" (completeMethod)="searchX($event)"
                         [dropdown]="true" [readonly]="true" placeholder="не выбрано"></p-autoComplete>
         <br/>
 
@@ -23,7 +23,7 @@
 
 
         <label id="labelR">Введите параметр R:  </label>
-        <p-autoComplete [(ngModel)]="selectedR" name="R" [suggestions]="outputR" (completeMethod)="searchR($event)"
+        <p-autoComplete id="autoComplete" [(ngModel)]="selectedR" name="R" [suggestions]="outputR" (completeMethod)="searchR($event)"
                         [dropdown]="true" [readonly]="true" (onSelect)="changeR(); graphComponent.redrawGraph()" placeholder="не выбрано"></p-autoComplete>
 
         <br/><br/><br/>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {CookieService} from "ngx-cookie-service";
 import {JwtService} from "./jwt-service/jwt.service";
@@ -9,12 +9,14 @@ import {sha256} from "js-sha256";
   templateUrl: './logging.component.html',
   styleUrls: ['./logging.component.css']
 })
-export class LoggingComponent implements OnInit {
+export class LoggingComponent implements OnInit, OnDestroy {
   username: string;
   password: string;
-  loginURL = "http://127.0.0.1:8080/backend-1.0-SNAPSHOT/login"
-  registerURL = "http://127.0.0.1:8080/backend-1.0-SNAPSHOT/register"
+  baseURL = "http://127.0.0.1:31272/backend-1.0-SNAPSHOT"
+  loginURL = this.baseURL + "/login"
+  registerURL = this.baseURL + "/register"
   message;
+  clockIntervalId: number;
 
 
   constructor(private router: Router,
@@ -27,7 +29,11 @@ export class LoggingComponent implements OnInit {
       this.cookieService.delete("message");
     }
     this.digitalClock();
-    setInterval(this.digitalClock, 1000);
+    this.clockIntervalId = setInterval(this.digitalClock, 1000);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.clockIntervalId);
   }
 
 
@@ -58,8 +64,8 @@ export class LoggingComponent implements OnInit {
               this.message = "Пользователя с таким именем и паролем не найдено"
               break
             }
-            case 3:{
-              //for new err codes
+            case 4:{
+              this.message = "хелиос упал брат"
               break
             }
           }
@@ -99,8 +105,8 @@ export class LoggingComponent implements OnInit {
               this.message = "Пользователь с таким именем уже существует"
               break
             }
-            case 2:{
-              //for new err codes
+            case 4:{
+              this.message = "хелиос упал брат"
               break
             }
           }

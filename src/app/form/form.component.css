@@ -1,30 +1,183 @@
-.gradientButton{
-  margin-top: 0;
-  margin-bottom: 7px;
-  height: 28px;
-  width: 80px;
-  border-radius: 0 0 10px 10px;
-  border: none;
-  cursor: pointer;
-  -webkit-transition-duration: 0.4s;
-  transition-duration: 0.4s;
+@media (min-width: 1046px) {
+
+  .button {
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    background-color: #2569ea;
+    border-radius: 5px;
+    border: 0;
+    margin-left: 20%;
+    margin-top: 10px;
+    height: 30px;
+    width: 20%;
+    cursor: pointer;
+  }
+
+  .button:hover {
+    background-color: #1e458f;
+    color: white;
+  }
+
+  .button:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px #1b1b1b;
+  }
+
+
+  .gradientButton {
+    margin-top: 0;
+    margin-bottom: 7px;
+    height: 28px;
+    width: 80px;
+    border-radius: 0 0 10px 10px;
+    border: none;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+  }
+
+  .gradientButton:hover {
+    height: 35px;
+    margin-bottom: 0;
+  }
+
+  #logoutButton {
+    background-color: #2569ea;
+  }
+
+  #githubButton {
+    float: right;
+    background-color: #cb6dff;
+  }
+
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
+  #autoComplete {
+    width: 10px;
+    height: 200px;
+  }
 }
 
-.gradientButton:hover {
-  height: 35px;
-  margin-bottom: 0;
+@media (max-width: 1046px) and (min-width: 738px) {
+  .button {
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    background-color: #2569ea;
+    border-radius: 5px;
+    border: 0;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 3px;
+    height: 30px;
+    width: 30%;
+    cursor: pointer;
+  }
+
+  .button:hover {
+    background-color: #1e458f;
+    color: white;
+  }
+
+  .button:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px #1b1b1b;
+  }
+
+
+  .gradientButton {
+    margin-top: 0;
+    margin-bottom: 7px;
+    height: 28px;
+    width: 80px;
+    border-radius: 0 0 10px 10px;
+    border: none;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+  }
+
+  .gradientButton:hover {
+    height: 35px;
+    margin-bottom: 0;
+  }
+
+  #logoutButton {
+    background-color: #2569ea;
+  }
+
+  #githubButton {
+    float: right;
+    background-color: #cb6dff;
+  }
+
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
+
 }
 
-#logoutButton {
-  background-color: #2569ea;
-}
+@media (max-width: 738px) {
+  .button {
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    background-color: #2569ea;
+    border-radius: 5px;
+    border: 0;
+    margin-left: 15%;
+    margin-top: 10px;
+    height: 50px;
+    width: 30%;
+    cursor: pointer;
+    font-size: 20px;
+  }
 
-#githubButton {
-  float: right;
-  background-color: #cb6dff;
-}
+  .button:hover {
+    background-color: #1e458f;
+    color: white;
+  }
 
-a {
-  color: black;
-  text-decoration: none;
+  .button:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px #1b1b1b;
+  }
+
+
+  .gradientButton {
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 7px;
+    height: 38px;
+    width: 120px;
+    border-radius: 0 0 10px 10px;
+    border: none;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+  }
+
+  .gradientButton:focus {
+    height: 45px;
+    margin-bottom: 0;
+  }
+
+  #logoutButton {
+    background-color: #2569ea;
+  }
+
+  #githubButton {
+    float: right;
+    background-color: #cb6dff;
+  }
+
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
+
 }

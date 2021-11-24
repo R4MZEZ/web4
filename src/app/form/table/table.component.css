@@ -6,3 +6,41 @@ hr {
   margin: 0 0 0 0;
   opacity: 30%;
 }
+
+
+#history-td {
+  width: 100%;
+  margin: 10px;
+  min-width: 600px;
+}
+
+#historyTable tr {
+  text-align-last: center;
+
+}
+
+
+#historyTable tr:nth-last-child(odd){
+  background-color: rgba(49, 49, 49, 0.48);
+}
+
+#historyTable tr:nth-child(1){
+  background-color: #d28cff;
+  color: black;
+}
+#historyTable {
+  overflow:hidden;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  border: none;
+  border-radius: 20px 20px 20px 20px;
+
+}
+
+@media (max-width: 738px) {
+  #historyTable{
+    font-size: 16px;
+    width: 90%;
+  }
+}
