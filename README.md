@@ -1,10 +1,15 @@
-# Untitled
+# Лабораторная №4 по вебу дэбильному
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.1.
+## таск:
 
-## Development server
+бэк: `Java EE (servlets + ejb)`
+фронт: `Angular 2+`, `PrimeNG` компоненты
+фронт->бэк: `REST API`
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+##Бздннх
+
+`Oracle` + `Hibernate`
+
 
 ## Code scaffolding
 
