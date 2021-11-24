@@ -2,7 +2,7 @@
 
 ## таск:
 
-бэк: `Java EE (servlets + ejb)`
+[бэк](https://github.com/R4MZEZ/web4-backend): `Java EE (servlets + ejb)`
 
 фронт: `Angular 2+`, `PrimeNG` компоненты
 
