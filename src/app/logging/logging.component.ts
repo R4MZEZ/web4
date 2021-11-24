@@ -21,10 +21,11 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router,
               private cookieService: CookieService,
-              private jwtService: JwtService) { }
+              private jwtService: JwtService) {
+  }
 
   ngOnInit(): void {
-    if (this.cookieService.check("message")){
+    if (this.cookieService.check("message")) {
       this.message = this.cookieService.get("message");
       this.cookieService.delete("message");
     }
@@ -38,7 +39,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
 
   login() {
-    if (this.validateForm()){
+    if (this.validateForm()) {
       fetch(this.loginURL,
         {
           method: 'POST',
@@ -53,18 +54,18 @@ export class LoggingComponent implements OnInit, OnDestroy {
           return response.json();
         }
 
-      }).then((user) =>{
-        if (user && user.jwt){
-          this.cookieService.set("currentUser",JSON.stringify(user))
+      }).then((user) => {
+        if (user && user.jwt) {
+          this.cookieService.set("currentUser", JSON.stringify(user))
           this.jwtService.currentUserSubject = user;
           this.router.navigate(['/']);
-        }else {
-          switch (user.errCode){
+        } else {
+          switch (user.errCode) {
             case 2: {
               this.message = "Пользователя с таким именем и паролем не найдено"
               break
             }
-            case 4:{
+            case 4: {
               this.message = "хелиос упал брат"
               break
             }
@@ -79,7 +80,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   register() {
-    if (this.validateForm()){
+    if (this.validateForm()) {
       fetch(this.registerURL,
         {
           method: 'POST',
@@ -94,18 +95,18 @@ export class LoggingComponent implements OnInit, OnDestroy {
           return response.json();
         }
 
-      }).then((user) =>{
-        if (user && user.jwt){
-          this.cookieService.set("currentUser",JSON.stringify(user))
+      }).then((user) => {
+        if (user && user.jwt) {
+          this.cookieService.set("currentUser", JSON.stringify(user))
           this.jwtService.currentUserSubject = user;
           this.router.navigate(['/']);
-        }else {
-          switch (user.errCode){
+        } else {
+          switch (user.errCode) {
             case 1: {
               this.message = "Пользователь с таким именем уже существует"
               break
             }
-            case 4:{
+            case 4: {
               this.message = "хелиос упал брат"
               break
             }
@@ -120,26 +121,68 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   }
 
-  validateForm(): boolean{
-    let valid = true;
-    if (this.username != undefined && this.username.length > 0 && this.username.length <= 10){
-      document.getElementById("uname")!.style.border = "0";
-      document.getElementById("uname")!.style.borderColor = "#8C9EAE";
-    } else {
-      document.getElementById("uname")!.style.border = "1px solid";
-      document.getElementById("uname")!.style.borderColor = "#c42929";
-      valid = false;
+  makeRed(field_id) {
+    document.getElementById(field_id)!.style.border = "1px solid";
+    document.getElementById(field_id)!.style.borderColor = "#c42929";
+    return false;
+  }
+
+  makeWhite(field_id) {
+    document.getElementById(field_id)!.style.border = "0";
+    document.getElementById(field_id)!.style.borderColor = "#8C9EAE";
+  }
+
+  validateForm(): boolean {
+    let validUname = true;
+
+    if (this.username == undefined)
+      validUname = this.makeRed("uname");
+    else {
+      if (!/^[a-zA-Z1-9]+$/.test(this.username)) {
+        this.message = "В логине должны быть только латинские буквы и цифры";
+        validUname = this.makeRed("uname");
+      }
+      if (this.username.length < 3) {
+        this.message = "Слишком короткий логин"
+        validUname = this.makeRed("uname");
+      }
+      if (this.username.length > 15) {
+        this.message = "Слишком длинный логин"
+        validUname = this.makeRed("uname");
+      }
     }
 
-    if (this.password != undefined && this.password.length > 0 && this.password.length <= 10){
-      document.getElementById("psw")!.style.border = "0";
-      document.getElementById("psw")!.style.borderColor = "#8C9EAE";
-    } else {
-      document.getElementById("psw")!.style.border = "1px solid";
-      document.getElementById("psw")!.style.borderColor = "#c42929";
-      valid = false;
+    if (validUname) {
+      this.makeWhite("uname");
+      this.message = ""
     }
-    return valid;
+
+
+    let validPsw = true;
+
+    if (this.password == undefined)
+      validPsw = this.makeRed("psw");
+    else {
+      if (!/^[a-zA-Z1-9]+$/.test(this.password)) {
+        this.message = "В пароле должны быть только латинские буквы и цифры";
+        validPsw = this.makeRed("psw");
+      }
+      if (this.password.length < 3) {
+        this.message = "Слишком короткий пароль"
+        validPsw = this.makeRed("psw");
+      }
+      if (this.password.length > 20) {
+        this.message = "Слишком длинный пароль"
+        validPsw = this.makeRed("psw");
+      }
+    }
+
+    if (validPsw) {
+      this.makeWhite("psw");
+      if (!validUname) this.message = ""
+    }
+
+    return validUname && validPsw;
   }
 
   digitalClock() {
