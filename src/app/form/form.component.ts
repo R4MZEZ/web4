@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormServiceService} from "./form-service.service";
 import {ValidationService} from "./validator/validation.service";
 import {FormGraphConnectorService} from "./form-graph-connector/form-graph-connector.service";
-import { Subscription } from 'rxjs';
+import {Subscription} from 'rxjs';
 import {Router} from "@angular/router";
 import {CookieService} from "ngx-cookie-service";
 
@@ -19,6 +19,10 @@ export class FormComponent implements OnInit, OnDestroy {
               private router: Router,
               private cookieService: CookieService) {
   }
+
+  isModer: boolean = false;
+  isAdmin: boolean = false;
+
   private subs: Subscription;
   subX: number;
   subY: number;
@@ -46,9 +50,9 @@ export class FormComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.subs = this.formGraphService.x$.subscribe((x)=>this.subX = x);
-    this.subs = this.formGraphService.y$.subscribe((y)=>this.subY = y);
-    this.subs = this.formGraphService.r$.subscribe(()=>{
+    this.subs = this.formGraphService.x$.subscribe((x) => this.subX = x);
+    this.subs = this.formGraphService.y$.subscribe((y) => this.subY = y);
+    this.subs = this.formGraphService.r$.subscribe(() => {
       let savedX = this.selectedX;
       let savedY = this.selectedY;
       this.selectedX = this.subX;
@@ -58,17 +62,54 @@ export class FormComponent implements OnInit, OnDestroy {
       this.selectedY = savedY;
       document.getElementById("invisible-button")!.click();
     });
-
-    this.sendService.getPoints().then((points) =>{
-      for(let i in points)
-        this.points.push(points[i]);
-    })
-
+    this.updateTable();
+    this.checkRole();
 
   }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+  }
+
+  checkRole() {
+    // @ts-ignore
+    let answer: Promise<any> = this.sendService.getRole();
+
+    answer.then((answer) => {
+      if (answer && answer.role) {
+        switch (answer.role) {
+          case "1": {
+            this.isModer = false;
+            break;
+          }
+          case "2": {
+            this.isModer = true;
+            break;
+          }
+          case "3": {
+            this.isAdmin = true;
+            break;
+          }
+
+        }
+      } else {
+        this.manageErrCode(answer.errCode);
+      }
+
+    })
+
+  }
+
+  updateTable() {
+    this.points = [];
+    this.sendService.getPoints().then((points) => {
+      for (let i in points) {
+        this.points.push(points[i]);
+        this.formGraphService.updatePoint(points[i]);
+      }
+    });
+
+
   }
 
   send() {
@@ -83,7 +124,7 @@ export class FormComponent implements OnInit, OnDestroy {
     let answer;
     answer = this.sendService.sendCoordinates(this.selectedX, this.selectedY, this.selectedR);
 
-    answer.then((result) =>{
+    answer.then((result) => {
       this.manageErrCode(result.errCode);
       this.addPoint(result);
       this.formGraphService.updatePoint(result);
@@ -91,7 +132,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
   }
 
-  addPoint(point){
+  addPoint(point) {
     this.points.push(point);
   }
 
@@ -102,15 +143,15 @@ export class FormComponent implements OnInit, OnDestroy {
     this.points = []
   }
 
-  manageErrCode(errCode){
-    switch (errCode){
+  manageErrCode(errCode) {
+    switch (errCode) {
       case 3: {
         this.cookieService.delete("currentUser");
         this.cookieService.set("message", "Время сессии истекло, пожалуйста, выполните повторную авторизацию")
         this.router.navigate(['/login']);
         break;
       }
-      case 4:{
+      case 4: {
         this.cookieService.delete("currentUser");
         this.cookieService.set("message", "хелиос упал брат")
         this.router.navigate(['/login']);
@@ -119,12 +160,18 @@ export class FormComponent implements OnInit, OnDestroy {
     }
   }
 
-  logout(){
+  logout() {
     this.cookieService.delete("currentUser");
+    this.cookieService.delete("moderUser");
+
     this.router.navigate(['/login']);
   }
 
-  public changeR(){
+  public changeR() {
     this.formGraphService.changeSelectedR(this.selectedR)
+  }
+
+  updateGraph() {
+    this.formGraphService.changePoints([]);
   }
 }

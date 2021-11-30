@@ -9,7 +9,7 @@ export class FormGraphConnectorService {
   public y$ = new Subject<number>();
   public r$ = new Subject<number>();
   public selectedR$ = new Subject<number>();
-
+  public points$ = new Subject<any[]>()
   public point$ = new Subject<any>();
 
   public changeValues(x: number, y: number, r: number) {
@@ -24,6 +24,10 @@ export class FormGraphConnectorService {
 
   public changeSelectedR(r: number){
     this.selectedR$.next(r);
+  }
+
+  public changePoints(points: any[]){
+    this.points$.next(points);
   }
 
   constructor() { }

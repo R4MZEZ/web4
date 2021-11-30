@@ -14,6 +14,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { LoggingComponent } from './logging/logging.component';
 import { AuthGuard } from './auth-guard/auth.guard'
 import {CookieService} from "ngx-cookie-service";
+import { ModeratorComponent } from './form/moderator/moderator.component';
 
 const appRoutes: Routes = [
   { path: '', component: FormComponent, canActivate: [AuthGuard] },
@@ -29,7 +30,8 @@ const appRoutes: Routes = [
     FormComponent,
     GraphComponent,
     TableComponent,
-    LoggingComponent
+    LoggingComponent,
+    ModeratorComponent
   ],
   imports: [
     RouterModule.forRoot(appRoutes),

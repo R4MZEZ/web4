@@ -12,7 +12,7 @@ import {sha256} from "js-sha256";
 export class LoggingComponent implements OnInit, OnDestroy {
   username: string;
   password: string;
-  baseURL = "http://127.0.0.1:31272/backend-1.0-SNAPSHOT"
+  baseURL = "http://127.0.0.1:8080/backend-1.0-SNAPSHOT"
   loginURL = this.baseURL + "/login"
   registerURL = this.baseURL + "/register"
   message;

@@ -23,6 +23,10 @@ export class GraphComponent implements OnInit {
     this.drawGraph();
     this.subs = this.formGraphService.point$.subscribe((point) => this.drawPoint(point));
     this.subs = this.formGraphService.selectedR$.subscribe((r) => this.r = r);
+    this.subs = this.formGraphService.points$.subscribe((points) => {
+      this.points = points;
+      this.redrawGraph();
+    })
     this.loadPoints();
   }
 
@@ -64,11 +68,11 @@ export class GraphComponent implements OnInit {
     let y = point.y / this.r * (-1) * 118 + 140;
     let x = point.x / this.r * 118 + 140;
 
-    //@ts-ignore
-    console.log(this.getCoords(document.querySelector("#canvas")!));
-
-    console.log(this.r)
-    console.log(x + ', ' + y)
+    // //@ts-ignore
+    // console.log(this.getCoords(document.querySelector("#canvas")!));
+    //
+    // console.log(this.r)
+    // console.log(x + ', ' + y)
 
 
     ctx.beginPath();
@@ -125,18 +129,16 @@ export class GraphComponent implements OnInit {
 
   redrawGraph() {
     this.reset(false);
-    this.drawGraph();
     this.loadPoints();
   }
 
   loadPoints() {
-    if (this.r != undefined && this.r > 0)
+    if (this.r != undefined && this.r > 0) {
       this.points.forEach(point => {
         this.drawPoint(point);
       });
+    }
   }
-
-
 
 
 }

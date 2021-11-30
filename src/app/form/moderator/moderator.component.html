@@ -1,0 +1,8 @@
+
+
+<div id="moderpanel">
+  <label id="labelX" style="line-height: 60px;">Выберите пользователя:  </label>
+  <br><br>
+  <p-autoComplete [(ngModel)]="selectedUser" name="selectedUser" [suggestions]="outputUsers" (completeMethod)="searchUser($event)"
+                  [dropdown]="true" [readonly]="true" (onSelect)="changeUser()" placeholder="не выбрано"></p-autoComplete>
+</div>

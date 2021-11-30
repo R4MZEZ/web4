@@ -1,15 +1,16 @@
 <button class="gradientButton" id="logoutButton" (click)="logout()">Выйти</button>
-<button class="gradientButton" id="githubButton"><a target="_blank" href="https://github.com/R4MZEZ/web4">GitHub</a></button>
+<button class="gradientButton" id="githubButton"><a target="_blank" href="https://github.com/R4MZEZ/web4">GitHub</a>
+</button>
 
 <div id="content">
   <div id="leftbar">
-    <app-graph [points]="points" [r]="selectedR" #graphComponent  (resetTable)="clearTable()"></app-graph>
+    <app-graph [points]="points" [r]="selectedR" #graphComponent (resetTable)="clearTable()"></app-graph>
   </div>
   <div id="rightbar">
     <form id="field-form" method="GET">
       <fieldset style="border: none;">
-        <label id="labelX">Выберите координату X:  </label>
-        <p-autoComplete id="autoComplete" [(ngModel)]="selectedX" name="X" [suggestions]="outputX" (completeMethod)="searchX($event)"
+        <label id="labelX">Выберите координату X: </label>
+        <p-autoComplete [(ngModel)]="selectedX" name="X" [suggestions]="outputX" (completeMethod)="searchX($event)"
                         [dropdown]="true" [readonly]="true" placeholder="не выбрано"></p-autoComplete>
         <br/>
 
@@ -22,9 +23,10 @@
         <br/>
 
 
-        <label id="labelR">Введите параметр R:  </label>
-        <p-autoComplete id="autoComplete" [(ngModel)]="selectedR" name="R" [suggestions]="outputR" (completeMethod)="searchR($event)"
-                        [dropdown]="true" [readonly]="true" (onSelect)="changeR(); graphComponent.redrawGraph()" placeholder="не выбрано"></p-autoComplete>
+        <label id="labelR">Введите параметр R: </label>
+        <p-autoComplete [(ngModel)]="selectedR" name="R" [suggestions]="outputR" (completeMethod)="searchR($event)"
+                        [dropdown]="true" [readonly]="true" (onSelect)="changeR(); graphComponent.redrawGraph()"
+                        placeholder="не выбрано"></p-autoComplete>
 
         <br/><br/><br/>
 
@@ -32,7 +34,7 @@
           Отправить
         </button>
 
-        <button id="reset-button"  class="button" (click)="graphComponent.reset(true)">
+        <button id="reset-button" class="button" (click)="graphComponent.reset(true)">
           Сбросить
         </button>
 
@@ -43,6 +45,7 @@
       </fieldset>
     </form>
   </div>
+  <app-moderator *ngIf="isModer" (userChange)="updateGraph(); updateTable()"></app-moderator>
 </div>
 
 <app-table [points]="points"></app-table>
