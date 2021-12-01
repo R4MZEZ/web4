@@ -2,6 +2,9 @@
 <button class="gradientButton" id="githubButton"><a target="_blank" href="https://github.com/R4MZEZ/web4">GitHub</a>
 </button>
 
+<div class="header-label" *ngIf="isModer && !isAdmin">Режим модератора</div>
+<div class="header-label" *ngIf="isAdmin">Режим администратора</div>
+
 <div id="content">
   <div id="leftbar">
     <app-graph [points]="points" [r]="selectedR" #graphComponent (resetTable)="clearTable()"></app-graph>
@@ -45,7 +48,7 @@
       </fieldset>
     </form>
   </div>
-  <app-moderator *ngIf="isModer" (userChange)="updateGraph(); updateTable()"></app-moderator>
+  <app-moderator *ngIf="isModer" [isAdmin]="isAdmin" (userChange)="updateGraph(); updateTable()"></app-moderator>
 </div>
 
-<app-table [points]="points"></app-table>
+<app-table [points]="points" [isModer]="isModer" (pointDeleted)="updateGraph(); updateTable()"></app-table>

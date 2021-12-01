@@ -118,12 +118,12 @@ export class GraphComponent implements OnInit {
     x -= document.querySelector("#canvas")!.offsetLeft + 190;
     //@ts-ignore
     y -= document.querySelector("#canvas")!.offsetTop + 202;
-    console.log(this.r)
+    // console.log(this.r)
     y = y * this.r * (-1) / 118;
     x = x * this.r / 118;
 
     this.formGraphService.changeValues(x, y, this.r);
-    console.log(x + ", " + y)
+    // console.log(x + ", " + y)
 
   }
 

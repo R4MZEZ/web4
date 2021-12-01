@@ -8,8 +8,9 @@
     <td>Координаты</td>
     <td>Радиус</td>
     <td>Время отправки</td>
-    <td>Исполнение</td>
+    <td>Исполнение, мс</td>
     <td>Результат</td>
+    <td *ngIf="isModer">Действие</td>
   </tr>
   <ng-container *ngFor="let point of points">
 
@@ -20,6 +21,11 @@
       <td>{{point.script_time}}</td>
       <td *ngIf="point.hit">Попадание</td>
       <td *ngIf="!point.hit">Промах</td>
+      <td *ngIf="isModer">
+        <button id="delete-button" class="button" (click)="deletePoint(point.id)">
+          Удалить
+        </button>
+      </td>
     </tr>
   </ng-container>
 </table>

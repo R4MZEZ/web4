@@ -72,37 +72,48 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   checkRole() {
-    // @ts-ignore
-    let answer: Promise<any> = this.sendService.getRole();
+    this.sendService.send("/checkRole", new Map<string, any>()
+      .set("token", this.cookieService.get("moderUser") == "" ?
+                    this.cookieService.get("currentUser") :
+                    this.cookieService.get("moderUser")))
+      .then((answer) => {
+        console.log(answer.role)
+        if (answer && answer.role) {
+          switch (answer.role) {
+            case "1": {
+              this.isModer = false;
+              break;
+            }
+            case "2": {
+              this.isModer = true;
+              break;
+            }
+            case "3": {
+              this.isModer = true;
+              this.isAdmin = true;
+              break;
+            }
 
-    answer.then((answer) => {
-      if (answer && answer.role) {
-        switch (answer.role) {
-          case "1": {
-            this.isModer = false;
-            break;
           }
-          case "2": {
-            this.isModer = true;
-            break;
-          }
-          case "3": {
-            this.isAdmin = true;
-            break;
-          }
-
+        } else {
+          this.manageErrCode(answer.errCode);
         }
-      } else {
-        this.manageErrCode(answer.errCode);
-      }
 
-    })
+      })
 
   }
 
   updateTable() {
     this.points = [];
-    this.sendService.getPoints().then((points) => {
+    // this.sendService.getPoints()
+    // this.sendService.getPoints()
+    // this.sendService.getPoints()
+    // this.sendService.getPoints()
+
+    this.sendService.send("/points", new Map<string, any>()
+      .set("token", this.cookieService.get("currentUser")))
+
+      .then((points) => {
       for (let i in points) {
         this.points.push(points[i]);
         this.formGraphService.updatePoint(points[i]);
@@ -121,10 +132,14 @@ export class FormComponent implements OnInit, OnDestroy {
 
     if (!valid) return;
 
-    let answer;
-    answer = this.sendService.sendCoordinates(this.selectedX, this.selectedY, this.selectedR);
 
-    answer.then((result) => {
+    this.sendService.send("/checkPoint", new Map<string, any>()
+      .set("token", this.cookieService.get("currentUser"))
+      .set("x", this.selectedX)
+      .set("y", this.selectedY)
+      .set("r", this.selectedR))
+
+      .then((result) => {
       this.manageErrCode(result.errCode);
       this.addPoint(result);
       this.formGraphService.updatePoint(result);
@@ -137,7 +152,10 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   clearTable() {
-    this.sendService.clear().then((result) => {
+    this.sendService.send("/clear", new Map<string, any>()
+      .set("token", this.cookieService.get("currentUser")))
+
+      .then((result) => {
       this.manageErrCode(result.errCode);
     });
     this.points = []

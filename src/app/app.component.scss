@@ -20,6 +20,23 @@ body {
   padding-right: 50px;
 }
 
+//moderator panel autocompletes
+.ng-tns-c63-2, .ng-tns-c63-3{
+  width: 85%;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.ng-tns-c63-2 .p-button, .ng-tns-c63-3 .p-button {
+  background-color: rgba(255, 127, 80, 0.83);
+  border-color: coral;
+}
+
+.ng-tns-c63-2 .p-button:hover, .ng-tns-c63-3 .p-button:hover {
+  background-color: rgba(204, 100, 64, 0.83);
+  border-color: coral;
+}
+
 
 @media (min-width: 1046px){
   #content {
@@ -29,7 +46,7 @@ body {
 
     display: flex;
     flex-flow: row nowrap;
-    align-items: center;
+    //align-items: center;
     align-content: center;
     justify-content: space-between;
   }

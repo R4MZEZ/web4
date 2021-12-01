@@ -1,8 +1,19 @@
 
 
 <div id="moderpanel">
-  <label id="labelX" style="line-height: 60px;">Выберите пользователя:  </label>
-  <br><br>
+  <label id="successMessage">Успешно</label>
+  <br>
   <p-autoComplete [(ngModel)]="selectedUser" name="selectedUser" [suggestions]="outputUsers" (completeMethod)="searchUser($event)"
-                  [dropdown]="true" [readonly]="true" (onSelect)="changeUser()" placeholder="не выбрано"></p-autoComplete>
+                  [dropdown]="true" [readonly]="true" (onSelect)="changeUser()" ></p-autoComplete>
+  <br>
+  <p-autoComplete *ngIf="isAdmin" [(ngModel)]="selectedRole" name="selectedRole" [suggestions]="outputRoles" (completeMethod)="searchRole($event)"
+                  [dropdown]="true"  [readonly]="true" (onSelect)="checkIfSameRole()"></p-autoComplete>
+
+  <br>
+  <button *ngIf="isAdmin" id="change-button" class="button" (click)="changeRole()">
+    Изменить
+  </button>
+  <button *ngIf="isAdmin" id="delete-button" class="button">
+    Удалить
+  </button>
 </div>
