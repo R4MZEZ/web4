@@ -30,16 +30,13 @@ export class ModeratorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.sendService.send("/getUsers", new Map<string, any>())
-      .then((users => {
-      for (let i in users)
-        this.resultUsers.push(users[i].username);
-    }))
-
+    this.updateUserList();
     this.selectedUser = JSON.parse(this.cookieService.get("currentUser")).username;
 
     this.setRole();
-    setTimeout(() => {this.checkIfSameRole();}, 10);
+    setTimeout(() => {
+      this.checkIfSameRole();
+    }, 10);
 
   }
 
@@ -48,25 +45,25 @@ export class ModeratorComponent implements OnInit {
       .set("token", this.cookieService.get("currentUser")))
 
       .then((answer) => {
-      switch (answer.role) {
-        case "1": {
-          this.selectedRole = "Пользователь"
-          this.selectedUser_role = "Пользователь";
-          break;
-        }
-        case "2": {
-          this.selectedRole = "Модератор"
-          this.selectedUser_role = "Модератор"
-          break;
-        }
-        case "3": {
-          this.selectedRole = "Администратор"
-          this.selectedUser_role = "Администратор"
-          break;
-        }
+        switch (answer.role) {
+          case "1": {
+            this.selectedRole = "Пользователь"
+            this.selectedUser_role = "Пользователь";
+            break;
+          }
+          case "2": {
+            this.selectedRole = "Модератор"
+            this.selectedUser_role = "Модератор"
+            break;
+          }
+          case "3": {
+            this.selectedRole = "Администратор"
+            this.selectedUser_role = "Администратор"
+            break;
+          }
 
-      }
-    })
+        }
+      })
   }
 
   searchUser(event) {
@@ -118,9 +115,9 @@ export class ModeratorComponent implements OnInit {
   changeRole() {
     this.sendService.send("/changeRole", new Map<string, any>()
       .set(
-      "moderator", this.cookieService.get("moderUser") == "" ?
-      this.cookieService.get("currentUser") :
-      this.cookieService.get("moderUser"))
+        "moderator", this.cookieService.get("moderUser") == "" ?
+          this.cookieService.get("currentUser") :
+          this.cookieService.get("moderUser"))
       .set("user_id", JSON.parse(this.cookieService.get("currentUser")).id)
       .set("role", this.selectedRole))
 
@@ -128,35 +125,66 @@ export class ModeratorComponent implements OnInit {
         if (answer.errCode)
           this.manageErrCode(answer.errCode)
         else {
-          document.getElementById("successMessage")!.style.opacity='1';
+          document.getElementById("successMessage")!.style.opacity = '1';
           document.getElementById("change-button")!.setAttribute("disabled", "true")
           this.setRole();
-          setTimeout(() => {document.getElementById("successMessage")!.style.opacity='0';}, 2000);
+          setTimeout(() => {
+            document.getElementById("successMessage")!.style.opacity = '0';
+          }, 2000);
         }
       });
 
-    // this.sendService.changeRole(JSON.parse(this.cookieService.get("currentUser")).id, this.selectedRole)
-    //   .then((answer) => {
-    //     if (answer.errCode)
-    //       this.manageErrCode(answer.errCode)
-    //     else {
-    //       document.getElementById("successMessage")!.style.opacity='1';
-    //       document.getElementById("change-button")!.setAttribute("disabled", "true")
-    //       this.setRole();
-    //       setTimeout(() => {document.getElementById("successMessage")!.style.opacity='0';}, 2000);
-    //     }
-    //   });
   }
 
   checkIfSameRole() {
     console.log(this.selectedRole)
     console.log(this.selectedUser_role)
 
-    if (this.selectedRole === this.selectedUser_role){
+    if (this.selectedRole === this.selectedUser_role) {
       document.getElementById("change-button")!.setAttribute("disabled", "true")
-    }else {
+    } else {
       document.getElementById("change-button")!.removeAttribute("disabled")
       console.log("we are here")
     }
+  }
+
+  deleteUser() {
+    this.sendService.send("/deleteUser", new Map<string, any>()
+      .set(
+        "moderator", this.cookieService.get("moderUser") == "" ?
+          this.cookieService.get("currentUser") :
+          this.cookieService.get("moderUser"))
+      .set("user_id", JSON.parse(this.cookieService.get("currentUser")).id))
+
+      .then((answer) => {
+        if (answer.errCode)
+          this.manageErrCode(answer.errCode)
+        else {
+          if (this.cookieService.get("moderUser") == "" ||
+            this.cookieService.get("moderUser") === this.cookieService.get("currentUser")) {
+            this.cookieService.delete("currentUser");
+            this.cookieService.delete("moderUser");
+            this.router.navigate(['/login'])
+          } else {
+            document.getElementById("successMessage")!.style.opacity = '1';
+            this.selectedUser = JSON.parse(this.cookieService.get("moderUser")).username;
+            this.changeUser();
+            this.updateUserList();
+            setTimeout(() => {
+              document.getElementById("successMessage")!.style.opacity = '0';
+            }, 2000);
+          }
+        }
+      });
+  }
+
+  updateUserList() {
+    this.resultUsers = [];
+    this.sendService.send("/getUsers", new Map<string, any>())
+      .then((users => {
+        for (let i in users)
+          this.resultUsers.push(users[i].username);
+      }))
+
   }
 }
