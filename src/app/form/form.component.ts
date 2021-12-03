@@ -5,7 +5,8 @@ import {FormGraphConnectorService} from "./form-graph-connector/form-graph-conne
 import {Subscription} from 'rxjs';
 import {Router} from "@angular/router";
 import {CookieService} from "ngx-cookie-service";
-
+import {SwPush, SwUpdate} from "@angular/service-worker";
+import {PushService} from "./push.service";
 
 @Component({
   selector: 'app-form',
@@ -13,11 +14,15 @@ import {CookieService} from "ngx-cookie-service";
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit, OnDestroy {
+  readonly VAPID_PUBLIC_KEY = "BCbCtZbYJK4f5MLUHRIyI0X6Bkd4X1YquAyyVWnmuO1TyAHV4bCWkxkubuO8IfzEjxPGUTZNo3iDp_xoJWwNY4c"
+
   constructor(private sendService: FormServiceService,
               private validateService: ValidationService,
               private formGraphService: FormGraphConnectorService,
               private router: Router,
-              private cookieService: CookieService) {
+              private cookieService: CookieService,
+              private swPush: SwPush,
+              private pushService: PushService) {
   }
 
   isModer: boolean = false;
@@ -64,18 +69,23 @@ export class FormComponent implements OnInit, OnDestroy {
     });
     this.updateTable();
     this.checkRole();
+    setTimeout(() => this.pushService.sendWebSocket(
+      this.cookieService.get("moderUser") == "" ?
+        JSON.parse(this.cookieService.get("currentUser")).id :
+        JSON.parse(this.cookieService.get("moderUser")).id), 1000)
 
   }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+    this.pushService.disconnect();
   }
 
   checkRole() {
-    this.sendService.send("/checkRole", new Map<string, any>()
+    this.sendService.sendHttp("/checkRole", new Map<string, any>()
       .set("token", this.cookieService.get("moderUser") == "" ?
-                    this.cookieService.get("currentUser") :
-                    this.cookieService.get("moderUser")))
+        this.cookieService.get("currentUser") :
+        this.cookieService.get("moderUser")))
       .then((answer) => {
         console.log(answer.role)
         if (answer && answer.role) {
@@ -110,15 +120,15 @@ export class FormComponent implements OnInit, OnDestroy {
     // this.sendService.getPoints()
     // this.sendService.getPoints()
 
-    this.sendService.send("/points", new Map<string, any>()
+    this.sendService.sendHttp("/points", new Map<string, any>()
       .set("token", this.cookieService.get("currentUser")))
 
       .then((points) => {
-      for (let i in points) {
-        this.points.push(points[i]);
-        this.formGraphService.updatePoint(points[i]);
-      }
-    });
+        for (let i in points) {
+          this.points.push(points[i]);
+          this.formGraphService.updatePoint(points[i]);
+        }
+      });
 
 
   }
@@ -133,17 +143,17 @@ export class FormComponent implements OnInit, OnDestroy {
     if (!valid) return;
 
 
-    this.sendService.send("/checkPoint", new Map<string, any>()
+    this.sendService.sendHttp("/checkPoint", new Map<string, any>()
       .set("token", this.cookieService.get("currentUser"))
       .set("x", this.selectedX)
       .set("y", this.selectedY)
       .set("r", this.selectedR))
 
       .then((result) => {
-      this.manageErrCode(result.errCode);
-      this.addPoint(result);
-      this.formGraphService.updatePoint(result);
-    })
+        this.manageErrCode(result.errCode);
+        this.addPoint(result);
+        this.formGraphService.updatePoint(result);
+      })
 
   }
 
@@ -152,12 +162,12 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
   clearTable() {
-    this.sendService.send("/clear", new Map<string, any>()
+    this.sendService.sendHttp("/clear", new Map<string, any>()
       .set("token", this.cookieService.get("currentUser")))
 
       .then((result) => {
-      this.manageErrCode(result.errCode);
-    });
+        this.manageErrCode(result.errCode);
+      });
     this.points = []
   }
 
@@ -192,4 +202,14 @@ export class FormComponent implements OnInit, OnDestroy {
   updateGraph() {
     this.formGraphService.changePoints([]);
   }
+
+  subscribeToNotifications() {
+
+    this.swPush.requestSubscription({
+      serverPublicKey: this.VAPID_PUBLIC_KEY
+    }).then((sub) => {
+      this.pushService.addSub(sub)
+    });
+  }
+
 }

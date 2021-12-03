@@ -5,12 +5,15 @@ import {Injectable} from '@angular/core';
 })
 export class FormServiceService {
 
+
   constructor() {
+
   }
 
   url = "http://127.0.0.1:8080/backend-1.0-SNAPSHOT";
 
-  send(mapping: string, args: Map<string, any>) : Promise<any>{
+
+  sendHttp(mapping: string, args: Map<string, any>) : Promise<any>{
     return fetch(this.url + mapping,
       {
         method: 'POST',
@@ -27,4 +30,8 @@ export class FormServiceService {
 
     })
   }
+
+
+
+
 }

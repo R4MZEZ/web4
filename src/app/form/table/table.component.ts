@@ -20,7 +20,7 @@ export class TableComponent implements OnInit {
 
 
   deletePoint(id) {
-    this.sendService.send("/deletePoint", new Map<string, any>()
+    this.sendService.sendHttp("/deletePoint", new Map<string, any>()
       .set(
         "moderator", this.cookieService.get("moderUser") == "" ?
           this.cookieService.get("currentUser") :

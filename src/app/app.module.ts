@@ -15,6 +15,8 @@ import { LoggingComponent } from './logging/logging.component';
 import { AuthGuard } from './auth-guard/auth.guard'
 import {CookieService} from "ngx-cookie-service";
 import { ModeratorComponent } from './form/moderator/moderator.component';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from "../environments/environment";
 
 const appRoutes: Routes = [
   { path: '', component: FormComponent, canActivate: [AuthGuard] },
@@ -41,11 +43,18 @@ const appRoutes: Routes = [
     AutoCompleteModule,
     FormsModule,
     BrowserAnimationsModule,
-    SliderModule
+    SliderModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [ CookieService ],
   bootstrap: [AppComponent],
   schemas:
     [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+  }
+}

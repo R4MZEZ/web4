@@ -41,7 +41,7 @@ export class ModeratorComponent implements OnInit {
   }
 
   setRole() {
-    this.sendService.send("/checkRole", new Map<string, any>()
+    this.sendService.sendHttp("/checkRole", new Map<string, any>()
       .set("token", this.cookieService.get("currentUser")))
 
       .then((answer) => {
@@ -80,7 +80,7 @@ export class ModeratorComponent implements OnInit {
     }
 
 
-    this.sendService.send("/fakeLogin", new Map<string, any>()
+    this.sendService.sendHttp("/fakeLogin", new Map<string, any>()
       .set("moderator", this.cookieService.get("moderUser"))
       .set("username", this.selectedUser)).then((user) => {
       if (user && user.jwt) {
@@ -89,6 +89,7 @@ export class ModeratorComponent implements OnInit {
         this.setRole();
         this.checkIfSameRole();
       } else {
+        console.log("change user error code: " + user.errCode)
         this.manageErrCode(user.errCode);
       }
     })
@@ -113,7 +114,7 @@ export class ModeratorComponent implements OnInit {
   }
 
   changeRole() {
-    this.sendService.send("/changeRole", new Map<string, any>()
+    this.sendService.sendHttp("/changeRole", new Map<string, any>()
       .set(
         "moderator", this.cookieService.get("moderUser") == "" ?
           this.cookieService.get("currentUser") :
@@ -122,8 +123,10 @@ export class ModeratorComponent implements OnInit {
       .set("role", this.selectedRole))
 
       .then((answer) => {
-        if (answer.errCode)
+        if (answer.errCode) {
+          console.log("change role error code: " + answer.errCode)
           this.manageErrCode(answer.errCode)
+        }
         else {
           document.getElementById("successMessage")!.style.opacity = '1';
           document.getElementById("change-button")!.setAttribute("disabled", "true")
@@ -149,7 +152,7 @@ export class ModeratorComponent implements OnInit {
   }
 
   deleteUser() {
-    this.sendService.send("/deleteUser", new Map<string, any>()
+    this.sendService.sendHttp("/deleteUser", new Map<string, any>()
       .set(
         "moderator", this.cookieService.get("moderUser") == "" ?
           this.cookieService.get("currentUser") :
@@ -157,8 +160,10 @@ export class ModeratorComponent implements OnInit {
       .set("user_id", JSON.parse(this.cookieService.get("currentUser")).id))
 
       .then((answer) => {
-        if (answer.errCode)
+        if (answer.errCode) {
+          console.log("delete user error code: " + answer.errCode)
           this.manageErrCode(answer.errCode)
+        }
         else {
           if (this.cookieService.get("moderUser") == "" ||
             this.cookieService.get("moderUser") === this.cookieService.get("currentUser")) {
@@ -180,7 +185,7 @@ export class ModeratorComponent implements OnInit {
 
   updateUserList() {
     this.resultUsers = [];
-    this.sendService.send("/getUsers", new Map<string, any>())
+    this.sendService.sendHttp("/getUsers", new Map<string, any>())
       .then((users => {
         for (let i in users)
           this.resultUsers.push(users[i].username);

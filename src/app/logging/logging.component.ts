@@ -16,7 +16,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   loginURL = this.baseURL + "/login"
   registerURL = this.baseURL + "/register"
   message;
-  clockIntervalId: number;
+  clockIntervalId: NodeJS.Timeout;
 
 
   constructor(private router: Router,
