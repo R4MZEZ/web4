@@ -3,6 +3,7 @@ import {Router} from "@angular/router";
 import {CookieService} from "ngx-cookie-service";
 import {JwtService} from "./jwt-service/jwt.service";
 import {sha256} from "js-sha256";
+import {FormServiceService} from "../form/services/send-service/form-service.service";
 
 @Component({
   selector: 'app-logging',
@@ -12,16 +13,14 @@ import {sha256} from "js-sha256";
 export class LoggingComponent implements OnInit, OnDestroy {
   username: string;
   password: string;
-  baseURL = "http://127.0.0.1:8080/backend-1.0-SNAPSHOT"
-  loginURL = this.baseURL + "/login"
-  registerURL = this.baseURL + "/register"
   message;
   clockIntervalId: NodeJS.Timeout;
 
 
   constructor(private router: Router,
               private cookieService: CookieService,
-              private jwtService: JwtService) {
+              private jwtService: JwtService,
+              private sendService: FormServiceService) {
   }
 
   ngOnInit(): void {
@@ -40,21 +39,12 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   login() {
     if (this.validateForm()) {
-      fetch(this.loginURL,
-        {
-          method: 'POST',
-          body: JSON.stringify({username: this.username, password: sha256(this.password)})
-        }
-      ).then(response => {
-        if (!response.ok) {
-          console.log("fail");
-          return response.status;
-        } else {
-          console.log("success");
-          return response.json();
-        }
 
-      }).then((user) => {
+      this.sendService.sendHttp("/login", new Map<string, any>()
+        .set("username", this.username)
+        .set("password", sha256(this.password)))
+
+        .then((user) => {
         if (user && user.jwt) {
           this.cookieService.set("currentUser", JSON.stringify(user))
           this.jwtService.currentUserSubject = user;
@@ -81,21 +71,12 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   register() {
     if (this.validateForm()) {
-      fetch(this.registerURL,
-        {
-          method: 'POST',
-          body: JSON.stringify({username: this.username, password: sha256(this.password)})
-        }
-      ).then(response => {
-        if (!response.ok) {
-          console.log("fail");
-          return response.status;
-        } else {
-          console.log("success");
-          return response.json();
-        }
 
-      }).then((user) => {
+      this.sendService.sendHttp("/register", new Map<string, any>()
+        .set("username", this.username)
+        .set("password", sha256(this.password)))
+
+        .then((user) => {
         if (user && user.jwt) {
           this.cookieService.set("currentUser", JSON.stringify(user))
           this.jwtService.currentUserSubject = user;

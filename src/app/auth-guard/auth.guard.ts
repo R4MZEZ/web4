@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import {CookieService} from "ngx-cookie-service";
 import {JwtService} from "../logging/jwt-service/jwt.service";
 
 

@@ -2,8 +2,10 @@
 <button class="gradientButton" id="githubButton"><a target="_blank" href="https://github.com/R4MZEZ/web4">GitHub</a>
 </button>
 
-<div class="header-label" *ngIf="isModer && !isAdmin">Режим модератора</div>
-<div class="header-label" *ngIf="isAdmin">Режим администратора</div>
+<div class="header-label" *ngIf="isModer && !isAdmin && !moderPanelShowed" (click)="changeView()">Режим модератора</div>
+<div class="header-label" *ngIf="isAdmin && !moderPanelShowed" (click)="changeView()">Режим администратора</div>
+<div class="header-label" id="userModeLabel" *ngIf="moderPanelShowed" (click)="changeView()">Режим пользователя</div>
+
 
 <div id="content">
   <div id="leftbar">
@@ -42,7 +44,7 @@
         </button>
 
         <button id="invisible-button"
-                style="display:none;" onclick="console.log('clicked')">
+                style="display:none;">
         </button>
 
       </fieldset>

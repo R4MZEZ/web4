@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ValidationService} from "../validator/validation.service";
-import {FormGraphConnectorService} from "../form-graph-connector/form-graph-connector.service";
+import {ValidationService} from "../services/validator/validation.service";
+import {FormGraphConnectorService} from "../services/form-graph-connector/form-graph-connector.service";
 import {Subscription} from "rxjs";
 
 @Component({
@@ -67,12 +67,6 @@ export class GraphComponent implements OnInit {
 
     let y = point.y / this.r * (-1) * 118 + 140;
     let x = point.x / this.r * 118 + 140;
-
-    // //@ts-ignore
-    // console.log(this.getCoords(document.querySelector("#canvas")!));
-    //
-    // console.log(this.r)
-    // console.log(x + ', ' + y)
 
 
     ctx.beginPath();

@@ -1,13 +1,15 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormServiceService} from "../form-service.service";
+import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {FormServiceService} from "../services/send-service/form-service.service";
 import {CookieService} from "ngx-cookie-service";
 import {Router} from "@angular/router";
-import {combineAll} from "rxjs";
+import {ErrorManagerService} from "../services/error-manager-service/error-manager.service";
+import {PushService} from "../services/push-service/push.service";
 
 @Component({
   selector: 'app-moderator',
   templateUrl: './moderator.component.html',
-  styleUrls: ['./moderator.component.css',]
+  styleUrls: ['./moderator.component.css',],
+  encapsulation: ViewEncapsulation.None
 })
 export class ModeratorComponent implements OnInit {
   selectedUser: string;
@@ -26,17 +28,22 @@ export class ModeratorComponent implements OnInit {
 
   constructor(private sendService: FormServiceService,
               private cookieService: CookieService,
-              private router: Router) {
+              private router: Router,
+              private errorManagerService: ErrorManagerService,
+              private pushService: PushService) {
   }
 
   ngOnInit(): void {
     this.updateUserList();
     this.selectedUser = JSON.parse(this.cookieService.get("currentUser")).username;
 
-    this.setRole();
-    setTimeout(() => {
-      this.checkIfSameRole();
-    }, 10);
+    if (this.isAdmin) {
+      this.setRole();
+      setTimeout(() => {
+        this.checkIfSameRole();
+      }, 10);
+    }
+
 
   }
 
@@ -89,29 +96,12 @@ export class ModeratorComponent implements OnInit {
         this.setRole();
         this.checkIfSameRole();
       } else {
-        console.log("change user error code: " + user.errCode)
-        this.manageErrCode(user.errCode);
+        this.errorManagerService.manageErrCode(user.errCode);
       }
     })
 
   }
 
-  manageErrCode(errCode) {
-    switch (errCode) {
-      case 3: {
-        this.cookieService.delete("currentUser");
-        this.cookieService.set("message", "Время сессии истекло, пожалуйста, выполните повторную авторизацию")
-        this.router.navigate(['/login']);
-        break;
-      }
-      case 4: {
-        this.cookieService.delete("currentUser");
-        this.cookieService.set("message", "хелиос упал брат")
-        this.router.navigate(['/login']);
-        break;
-      }
-    }
-  }
 
   changeRole() {
     this.sendService.sendHttp("/changeRole", new Map<string, any>()
@@ -124,10 +114,8 @@ export class ModeratorComponent implements OnInit {
 
       .then((answer) => {
         if (answer.errCode) {
-          console.log("change role error code: " + answer.errCode)
-          this.manageErrCode(answer.errCode)
-        }
-        else {
+          this.errorManagerService.manageErrCode(answer.errCode)
+        } else {
           document.getElementById("successMessage")!.style.opacity = '1';
           document.getElementById("change-button")!.setAttribute("disabled", "true")
           this.setRole();
@@ -140,14 +128,10 @@ export class ModeratorComponent implements OnInit {
   }
 
   checkIfSameRole() {
-    console.log(this.selectedRole)
-    console.log(this.selectedUser_role)
-
     if (this.selectedRole === this.selectedUser_role) {
       document.getElementById("change-button")!.setAttribute("disabled", "true")
     } else {
       document.getElementById("change-button")!.removeAttribute("disabled")
-      console.log("we are here")
     }
   }
 
@@ -161,10 +145,8 @@ export class ModeratorComponent implements OnInit {
 
       .then((answer) => {
         if (answer.errCode) {
-          console.log("delete user error code: " + answer.errCode)
-          this.manageErrCode(answer.errCode)
-        }
-        else {
+          this.errorManagerService.manageErrCode(answer.errCode)
+        } else {
           if (this.cookieService.get("moderUser") == "" ||
             this.cookieService.get("moderUser") === this.cookieService.get("currentUser")) {
             this.cookieService.delete("currentUser");

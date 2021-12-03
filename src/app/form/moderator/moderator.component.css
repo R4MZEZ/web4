@@ -11,6 +11,7 @@
 
 }
 
+
 .button {
   -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
@@ -42,4 +43,28 @@
 }
 
 
+@media (min-width: 1046px) {
 
+}
+
+@media (max-width: 1046px) and (min-width: 738px){
+  #moderpanel{
+    display:none;
+  }
+}
+
+@media (max-width: 738px) {
+  #moderpanel{
+    display:none;
+    margin-top: 150px;
+    margin-right: 110px;
+    width: 300px;
+    height: 250px;
+  }
+
+  #change-button, #delete-button{
+    height: 35px;
+    font-size: 16px;
+  }
+
+}

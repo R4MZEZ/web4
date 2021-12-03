@@ -1,11 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormServiceService} from "./form-service.service";
-import {ValidationService} from "./validator/validation.service";
-import {FormGraphConnectorService} from "./form-graph-connector/form-graph-connector.service";
+import {FormServiceService} from "./services/send-service/form-service.service";
+import {ValidationService} from "./services/validator/validation.service";
+import {FormGraphConnectorService} from "./services/form-graph-connector/form-graph-connector.service";
 import {Subscription} from 'rxjs';
 import {Router} from "@angular/router";
 import {CookieService} from "ngx-cookie-service";
-import {PushService} from "./push.service";
+import {PushService} from "./services/push-service/push.service";
+import {ErrorManagerService} from "./services/error-manager-service/error-manager.service";
+import {isDefaultLibrary} from "@angular/compiler-cli/ngcc/src/packages/source_file_cache";
 
 @Component({
   selector: 'app-form',
@@ -19,11 +21,13 @@ export class FormComponent implements OnInit, OnDestroy {
               private formGraphService: FormGraphConnectorService,
               private router: Router,
               private cookieService: CookieService,
-              private pushService: PushService) {
+              private pushService: PushService,
+              private errorManagerService: ErrorManagerService) {
   }
 
   isModer: boolean = false;
   isAdmin: boolean = false;
+  moderPanelShowed: boolean = false;
 
   private subs: Subscription;
   subX: number;
@@ -45,11 +49,9 @@ export class FormComponent implements OnInit, OnDestroy {
     this.outputX = this.resultsX.filter(c => c.toString().startsWith(event.query));
   }
 
-
   searchR(event) {
     this.outputR = this.resultsR.filter(c => c.toString().startsWith(event.query));
   }
-
 
   ngOnInit(): void {
     this.subs = this.formGraphService.x$.subscribe((x) => this.subX = x);
@@ -72,6 +74,22 @@ export class FormComponent implements OnInit, OnDestroy {
         JSON.parse(this.cookieService.get("moderUser")).id), 1000)
     Notification.requestPermission();
 
+    this.pushService.roleChanged$.subscribe((newRole) => {
+      switch (newRole) {
+        case 1:
+          this.isAdmin = false;
+          this.isModer = false;
+          break;
+        case 2:
+          this.isAdmin = false;
+          this.isModer = true;
+          break;
+        case 3:
+          this.isAdmin = true;
+          this.isModer = true;
+      }
+    })
+
   }
 
   ngOnDestroy(): void {
@@ -85,7 +103,6 @@ export class FormComponent implements OnInit, OnDestroy {
         this.cookieService.get("currentUser") :
         this.cookieService.get("moderUser")))
       .then((answer) => {
-        console.log(answer.role)
         if (answer && answer.role) {
           switch (answer.role) {
             case "1": {
@@ -104,7 +121,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
           }
         } else {
-          this.manageErrCode(answer.errCode);
+          this.errorManagerService.manageErrCode(answer.errCode);
         }
 
       })
@@ -148,7 +165,7 @@ export class FormComponent implements OnInit, OnDestroy {
       .set("r", this.selectedR))
 
       .then((result) => {
-        this.manageErrCode(result.errCode);
+        this.errorManagerService.manageErrCode(result.errCode);
         this.addPoint(result);
         this.formGraphService.updatePoint(result);
       })
@@ -164,33 +181,16 @@ export class FormComponent implements OnInit, OnDestroy {
       .set("token", this.cookieService.get("currentUser")))
 
       .then((result) => {
-        this.manageErrCode(result.errCode);
+        this.errorManagerService.manageErrCode(result.errCode);
       });
     this.points = []
-  }
-
-  manageErrCode(errCode) {
-    switch (errCode) {
-      case 3: {
-        this.cookieService.delete("currentUser");
-        this.cookieService.set("message", "Время сессии истекло, пожалуйста, выполните повторную авторизацию")
-        this.router.navigate(['/login']);
-        break;
-      }
-      case 4: {
-        this.cookieService.delete("currentUser");
-        this.cookieService.set("message", "хелиос упал брат")
-        this.router.navigate(['/login']);
-        break;
-      }
-    }
   }
 
   logout() {
     this.cookieService.delete("currentUser");
     this.cookieService.delete("moderUser");
-
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login'])
+    this.pushService.disconnect();
   }
 
   public changeR() {
@@ -202,4 +202,15 @@ export class FormComponent implements OnInit, OnDestroy {
   }
 
 
+  changeView() {
+    if (this.moderPanelShowed) {
+      document.getElementById("moderpanel")!.style.display = "none";
+      document.getElementById("rightbar")!.style.display = "inline-block";
+    }else {
+      document.getElementById("moderpanel")!.style.display = "inline";
+      document.getElementById("rightbar")!.style.display = "none";
+    }
+    this.moderPanelShowed = !this.moderPanelShowed;
+
+  }
 }

@@ -20,19 +20,20 @@ body {
   padding-right: 50px;
 }
 
-//moderator panel autocompletes
-.ng-tns-c63-2, .ng-tns-c63-3{
-  width: 85%;
-  margin-bottom: 5px;
-  font-size: 14px;
-}
 
-.ng-tns-c63-2 .p-button, .ng-tns-c63-3 .p-button {
+//moderator panel autocompletes
+#moderpanel .p-autocomplete {
+  width: 85%;
+  margin-bottom: 10px;
+  font-size: 14px;
+
+}
+#moderpanel .p-autocomplete-dropdown{
   background-color: rgba(255, 127, 80, 0.83);
   border-color: coral;
 }
 
-.ng-tns-c63-2 .p-button:hover, .ng-tns-c63-3 .p-button:hover {
+#moderpanel .p-button:hover, #moderpanel .p-button:hover {
   background-color: rgba(204, 100, 64, 0.83);
   border-color: coral;
 }
@@ -71,11 +72,15 @@ body {
     border: 1px solid black;
     border-radius: 30px;
     padding: 15px;
-    min-width: 500px;
+    //min-width: 500px;
     //display: inline-block;
     //position: absolute;
   }
 
+  #rightbar .p-autocomplete{
+    width: 40%;
+    height: 30px;
+  }
 
   #container > div:nth-child(2) {
     background-color: #363636;
@@ -149,7 +154,21 @@ body {
     font-size: 20px;
   }
 
+  .p-autocomplete{
+    width: 40%;
+    height: 30px;
+  }
 
+  .p-autocomplete-input{
+    font-size: smaller;
+  }
+
+  #moderpanel .p-autocomplete {
+    width: 90%;
+    height: 40px;
+    font-size: 18px;
+    margin-bottom: 30px;
+  }
   #content {
     height: 800px;
     white-space: nowrap;

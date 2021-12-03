@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormServiceService} from "../form-service.service";
+import {FormServiceService} from "../services/send-service/form-service.service";
 import {CookieService} from "ngx-cookie-service";
 
 @Component({

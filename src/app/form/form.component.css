@@ -4,14 +4,24 @@
   background-color: rgba(255, 127, 80, 0.3);
   padding: 5px;
   border-radius: 5px;
-  width: 15%;
+  width: 200px;
   text-align: center;
   margin-right: 40%;
   margin-left: 43%;
+  white-space: nowrap;
 }
 
+#userModeLabel{
+  border: 2px solid #2569ea;
+  background-color: rgba(37, 105, 234, 0.3);
+
+}
 
 @media (min-width: 1046px) {
+
+  .header-label{
+    display: none;
+  }
 
   .button {
     -webkit-transition-duration: 0.4s;
@@ -75,6 +85,11 @@
 }
 
 @media (max-width: 1046px) and (min-width: 738px) {
+
+
+  .header-label{
+    font-size: 14px;
+  }
   .button {
     -webkit-transition-duration: 0.4s;
     transition-duration: 0.4s;
@@ -135,6 +150,11 @@
 }
 
 @media (max-width: 738px) {
+
+  .header-label{
+    font-size: 13px;
+    margin-left: 37%;
+  }
   .button {
     -webkit-transition-duration: 0.4s;
     transition-duration: 0.4s;
