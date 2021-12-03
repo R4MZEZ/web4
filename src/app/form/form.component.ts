@@ -5,7 +5,6 @@ import {FormGraphConnectorService} from "./form-graph-connector/form-graph-conne
 import {Subscription} from 'rxjs';
 import {Router} from "@angular/router";
 import {CookieService} from "ngx-cookie-service";
-import {SwPush, SwUpdate} from "@angular/service-worker";
 import {PushService} from "./push.service";
 
 @Component({
@@ -14,14 +13,12 @@ import {PushService} from "./push.service";
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit, OnDestroy {
-  readonly VAPID_PUBLIC_KEY = "BCbCtZbYJK4f5MLUHRIyI0X6Bkd4X1YquAyyVWnmuO1TyAHV4bCWkxkubuO8IfzEjxPGUTZNo3iDp_xoJWwNY4c"
 
   constructor(private sendService: FormServiceService,
               private validateService: ValidationService,
               private formGraphService: FormGraphConnectorService,
               private router: Router,
               private cookieService: CookieService,
-              private swPush: SwPush,
               private pushService: PushService) {
   }
 
@@ -73,6 +70,7 @@ export class FormComponent implements OnInit, OnDestroy {
       this.cookieService.get("moderUser") == "" ?
         JSON.parse(this.cookieService.get("currentUser")).id :
         JSON.parse(this.cookieService.get("moderUser")).id), 1000)
+    Notification.requestPermission();
 
   }
 
@@ -203,13 +201,5 @@ export class FormComponent implements OnInit, OnDestroy {
     this.formGraphService.changePoints([]);
   }
 
-  subscribeToNotifications() {
-
-    this.swPush.requestSubscription({
-      serverPublicKey: this.VAPID_PUBLIC_KEY
-    }).then((sub) => {
-      this.pushService.addSub(sub)
-    });
-  }
 
 }

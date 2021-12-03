@@ -51,5 +51,4 @@
   <app-moderator *ngIf="isModer" [isAdmin]="isAdmin" (userChange)="updateGraph(); updateTable()"></app-moderator>
 </div>
 
-<button (click)="subscribeToNotifications()">Подписаться</button>
 <app-table [points]="points" [isModer]="isModer" (pointDeleted)="updateGraph(); updateTable()"></app-table>

@@ -1,21 +1,19 @@
 import {Injectable} from '@angular/core';
 
 
-import webpush from "web-push";
-
 @Injectable({
   providedIn: 'root'
 })
 export class PushService {
   webSocket: WebSocket;
-  pushSub: PushSubscription;
 
 
   constructor() {
 
-    this.pushSub;
     this.webSocket = new WebSocket("ws://localhost:8080/backend-1.0-SNAPSHOT/connect");
-    this.webSocket.onmessage = ((message) => this.showNotification(message));
+    this.webSocket.onmessage = ((message) => new Notification(
+      'Уведомление от лучшего в мире сайта', {body: message.data})
+    );
     this.webSocket.onopen = function () {
       console.log("connection opened");
     };
@@ -29,10 +27,6 @@ export class PushService {
     }
   }
 
-  addSub(sub: PushSubscription) {
-    this.pushSub = sub;
-
-  }
 
   sendWebSocket(username: string) {
     this.webSocket.send(username)
@@ -42,14 +36,4 @@ export class PushService {
     this.webSocket.close();
   }
 
-  private showNotification(message: MessageEvent) {
-    let notificationPayload = {
-      "notification": {
-        "title": "Уведомление",
-        "body": message.data,
-        "vibrate": [100, 50, 100],
-      }
-    };
-    webpush.sendNotification(this.pushSub, JSON.stringify(notificationPayload) )
-  }
 }
