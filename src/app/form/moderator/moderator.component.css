@@ -48,14 +48,12 @@
 }
 
 @media (max-width: 1046px) and (min-width: 738px){
-  #moderpanel{
-    display:none;
-  }
+
 }
 
 @media (max-width: 738px) {
   #moderpanel{
-    display:none;
+
     margin-top: 150px;
     margin-right: 110px;
     width: 300px;

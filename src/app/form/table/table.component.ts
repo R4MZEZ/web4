@@ -10,16 +10,19 @@ import {CookieService} from "ngx-cookie-service";
 export class TableComponent implements OnInit {
 
   constructor(private sendService: FormServiceService,
-              private cookieService: CookieService) { }
+              private cookieService: CookieService) {
+  }
 
   ngOnInit(): void {
   }
+
   @Output() pointDeleted = new EventEmitter();
   @Input() isModer: boolean;
   @Input() points: any[];
 
 
   deletePoint(id) {
+
     this.sendService.sendHttp("/deletePoint", new Map<string, any>()
       .set(
         "moderator", this.cookieService.get("moderUser") == "" ?
@@ -27,5 +30,7 @@ export class TableComponent implements OnInit {
           this.cookieService.get("moderUser"))
       .set("point_id", id));
     this.pointDeleted.emit();
+
+
   }
 }

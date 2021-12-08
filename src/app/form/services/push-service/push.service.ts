@@ -16,7 +16,7 @@ export class PushService {
 
   constructor() {
 
-    this.webSocket = new WebSocket("ws://localhost:8080/backend-1.0-SNAPSHOT/connect");
+    this.webSocket = new WebSocket("ws://localhost:31272/backend-1.0-SNAPSHOT/connect");
     this.webSocket.onmessage = ((message) => {
         let newRole: number;
         switch (message.data.substr(22)){

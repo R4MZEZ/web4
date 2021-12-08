@@ -9,6 +9,7 @@
   margin-right: 40%;
   margin-left: 43%;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 #userModeLabel{

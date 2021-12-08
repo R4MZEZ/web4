@@ -27,7 +27,7 @@ export class FormComponent implements OnInit, OnDestroy {
 
   isModer: boolean = false;
   isAdmin: boolean = false;
-  moderPanelShowed: boolean = false;
+  moderPanelShowed: boolean = true;
 
   private subs: Subscription;
   subX: number;
@@ -44,6 +44,11 @@ export class FormComponent implements OnInit, OnDestroy {
   outputR: number[];
   selectedR: number;
   resultsR: number[] = [-2.5, -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5];
+
+  mediaQueryDesktop = window.matchMedia('(min-width: 1046px)')
+  mediaQueryTablet = window.matchMedia('(max-width: 1046px) and (min-width: 738px)')
+  mediaQueryMobile = window.matchMedia('(max-width: 738px)')
+
 
   searchX(event) {
     this.outputX = this.resultsX.filter(c => c.toString().startsWith(event.query));
@@ -67,7 +72,38 @@ export class FormComponent implements OnInit, OnDestroy {
       document.getElementById("invisible-button")!.click();
     });
     this.updateTable();
-    this.checkRole();
+    this.checkRole().then((answer) => {
+      if (answer && answer.role) {
+        switch (answer.role) {
+          case "1": {
+            this.isModer = false;
+            this.isAdmin = false;
+            break;
+          }
+          case "2": {
+            this.isModer = true;
+            this.isAdmin = false;
+            break;
+          }
+          case "3": {
+            this.isModer = true;
+            this.isAdmin = true;
+            break;
+          }
+
+        }
+
+        setTimeout(()=>{this.desktopScale(this.mediaQueryDesktop)
+          this.tabletScale(this.mediaQueryTablet)
+          this.mobileScale(this.mediaQueryMobile)}, 1)
+
+
+      } else {
+        this.errorManagerService.manageErrCode(answer.errCode);
+      }
+
+    });
+
     setTimeout(() => this.pushService.sendWebSocket(
       this.cookieService.get("moderUser") == "" ?
         JSON.parse(this.cookieService.get("currentUser")).id :
@@ -90,6 +126,11 @@ export class FormComponent implements OnInit, OnDestroy {
       }
     })
 
+    this.mediaQueryDesktop.addListener(this.desktopScale)
+    this.mediaQueryTablet.addListener(this.tabletScale)
+    this.mediaQueryMobile.addListener(this.mobileScale)
+
+
   }
 
   ngOnDestroy(): void {
@@ -97,48 +138,23 @@ export class FormComponent implements OnInit, OnDestroy {
     this.pushService.disconnect();
   }
 
-  checkRole() {
-    this.sendService.sendHttp("/checkRole", new Map<string, any>()
+  checkRole(): Promise<any> {
+    return this.sendService.sendHttp("/checkRole", new Map<string, any>()
       .set("token", this.cookieService.get("moderUser") == "" ?
         this.cookieService.get("currentUser") :
         this.cookieService.get("moderUser")))
-      .then((answer) => {
-        if (answer && answer.role) {
-          switch (answer.role) {
-            case "1": {
-              this.isModer = false;
-              break;
-            }
-            case "2": {
-              this.isModer = true;
-              break;
-            }
-            case "3": {
-              this.isModer = true;
-              this.isAdmin = true;
-              break;
-            }
 
-          }
-        } else {
-          this.errorManagerService.manageErrCode(answer.errCode);
-        }
-
-      })
 
   }
 
   updateTable() {
     this.points = [];
-    // this.sendService.getPoints()
-    // this.sendService.getPoints()
-    // this.sendService.getPoints()
-    // this.sendService.getPoints()
 
     this.sendService.sendHttp("/points", new Map<string, any>()
       .set("token", this.cookieService.get("currentUser")))
 
       .then((points) => {
+        console.log(points)
         for (let i in points) {
           this.points.push(points[i]);
           this.formGraphService.updatePoint(points[i]);
@@ -206,11 +222,46 @@ export class FormComponent implements OnInit, OnDestroy {
     if (this.moderPanelShowed) {
       document.getElementById("moderpanel")!.style.display = "none";
       document.getElementById("rightbar")!.style.display = "inline-block";
-    }else {
+    } else {
       document.getElementById("moderpanel")!.style.display = "inline";
       document.getElementById("rightbar")!.style.display = "none";
     }
     this.moderPanelShowed = !this.moderPanelShowed;
 
   }
+
+
+  desktopScale(e) {
+    console.log(this.moderPanelShowed)
+    if (e.matches) {
+      document.getElementById("moderpanel")!.style.display = "inline";
+      document.getElementById("rightbar")!.style.display = "inline-block";
+      this.moderPanelShowed = true;
+
+    }
+  }
+
+  tabletScale(e) {
+    console.log(this.moderPanelShowed)
+    if (e.matches) {
+      document.getElementById("moderpanel")!.style.display = "none";
+      document.getElementById("rightbar")!.style.display = "inline-block";
+      this.moderPanelShowed = false;
+    }
+  }
+
+  mobileScale(e) {
+
+    if (e.matches) {
+      if (this.moderPanelShowed) {
+        document.getElementById("moderpanel")!.style.display = "inline";
+        document.getElementById("rightbar")!.style.display = "none";
+      } else {
+        document.getElementById("moderpanel")!.style.display = "none";
+        document.getElementById("rightbar")!.style.display = "inline-block";
+      }
+    }
+  }
+
+
 }

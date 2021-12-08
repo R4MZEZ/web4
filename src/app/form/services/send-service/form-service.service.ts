@@ -10,7 +10,7 @@ export class FormServiceService {
 
   }
 
-  url = "http://127.0.0.1:8080/backend-1.0-SNAPSHOT";
+  url = "http://localhost:31272/backend-1.0-SNAPSHOT";
 
 
   sendHttp(mapping: string, args: Map<string, any>): Promise<any> {
